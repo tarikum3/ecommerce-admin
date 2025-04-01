@@ -51,11 +51,11 @@ const NotificationCard: FC<NotificationCardProps> = memo(({ item }) => {
     // Only update the status if it's not already "OPENED"
     if (item.status !== "OPENED") {
       try {
-        await updateNotification({
-          userId: "currentUserId", // Replace with the actual user ID
-          notificationId: item.id,
-          status: "OPENED",
-        }).unwrap();
+        // await updateNotification({
+        //   userId: "currentUserId", // Replace with the actual user ID
+        //   notificationId: item.id,
+        //   status: "OPENED",
+        // }).unwrap();
       } catch (error) {
         console.error("Failed to update notification status:", error);
       }

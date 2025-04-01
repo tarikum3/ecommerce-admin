@@ -58,7 +58,7 @@ const CreateProduct: React.FC = () => {
   const handleFormSubmit = async (data: Record<string, any>) => {
     try {
       console.log("Submitting data...", data);
-      const response = await createProduct(data);
+      const response = await createProduct(data as any);
       console.log("Data submitted successfully:", response);
     } catch (error) {
       console.error("Error submitting data:", error);

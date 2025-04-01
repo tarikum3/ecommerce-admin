@@ -1,18 +1,13 @@
 import prisma, { Product, Collection } from "@lib/prisma";
 import { TAGS } from "@lib/const";
-import {
-  getCartItem,
-  getCartByIdUtil,
-  deleteCookies,
-  placeOrderUtil,
-} from "@lib/actions/actions";
+import { deleteCookies } from "@lib/actions/actions";
 
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import clsx, { ClassValue } from "clsx";
 import { z } from "zod";
 
-export { getCartItem, getCartByIdUtil, deleteCookies, placeOrderUtil };
+export { deleteCookies };
 interface Rule {
   field: string;
   condition: string;
