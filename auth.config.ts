@@ -12,6 +12,7 @@ export const authConfig = {
       const isOnAuthPage = nextUrl.pathname.startsWith("/admin/auth");
       const isOnAdminOnly =
         nextUrl.pathname.endsWith("/admin") ||
+        nextUrl.pathname.endsWith("/") ||
         nextUrl.pathname.endsWith("/admin/");
       //if (isLoggedIn) return true;
       if (isLoggedIn) {
