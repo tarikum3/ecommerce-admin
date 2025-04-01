@@ -16,7 +16,7 @@ import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import UserMenu from "@/app/components/admin/components/user/UserMenu";
 import { useTranslations } from "next-intl";
 import { useUI } from "@/app/components/admin/components/ui/UIContext";
-//import CloseIcon from "@mui/icons-material/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { Logo } from "@/app/components";
 
