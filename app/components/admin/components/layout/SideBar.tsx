@@ -14,9 +14,9 @@ import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import UserMenu from "@/app/components/admin/components/user/UserMenu";
-import { useTranslations } from "next-intl"; // Import next-intl for localization
-import { useUI } from "@/app/components/admin/components/ui/UIContext"; // Import the UI context
-import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon
+import { useTranslations } from "next-intl";
+import { useUI } from "@/app/components/admin/components/ui/UIContext";
+//import CloseIcon from "@mui/icons-material/Close";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { Logo } from "@/app/components";
 
