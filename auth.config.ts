@@ -16,7 +16,9 @@ export const authConfig = {
       //if (isLoggedIn) return true;
       if (isLoggedIn) {
         if (isOnAuthPage || isOnAdminOnly)
-          return Response.redirect(new URL("/admin/overview", nextUrl));
+          return Response.redirect(
+            new URL("/admin/dashboard/overview", nextUrl)
+          );
 
         return true;
       }
