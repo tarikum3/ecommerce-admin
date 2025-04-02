@@ -18,7 +18,7 @@ const LoginView: React.FC = () => {
   return (
     <form
       action={dispatch}
-      className="w-80 flex flex-col justify-between p-6 space-y-4 rounded-lg "
+      className="w-80 flex flex-col justify-between p-6 space-y-4 rounded-lg border border-primary-500"
     >
       <div className="flex justify-center pb-8">
         <Logo width="64px" height="64px" />
@@ -72,7 +72,7 @@ const LoginView: React.FC = () => {
           <a
             className="text-primary-900 font-bold hover:underline cursor-pointer"
             // onClick={() => setModalView("SIGNUP_VIEW")}
-            href="/admin/auth/signup"
+            href="/auth/signup"
           >
             Sign Up
           </a>
@@ -80,7 +80,7 @@ const LoginView: React.FC = () => {
           <a
             className="text-primary-900 font-bold hover:underline cursor-pointer"
             //onClick={() => setModalView("FORGOT_VIEW")}
-            href="/admin/auth/forgot"
+            href="/auth/forgot"
           >
             Forgot password?
           </a>
