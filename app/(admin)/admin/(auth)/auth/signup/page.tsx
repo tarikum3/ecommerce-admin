@@ -1,4 +1,4 @@
-import SignUpView from "@/app/components/admin/components/auth/SignUpView";
+import SignUpView from "@/app/components/admin/auth/SignUpView";
 
 export default function SignUpPage() {
   return (

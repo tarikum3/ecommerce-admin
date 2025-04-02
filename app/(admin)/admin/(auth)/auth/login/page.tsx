@@ -1,4 +1,4 @@
-// import LoginView from "@/app/components/admin/components/auth/LoginView";
+// import LoginView from "@/app/components/admin/auth/LoginView";
 
 // export default function LoginPage() {
 //   return (
@@ -10,7 +10,7 @@
 //   );
 // }
 
-import LoginView from "@/app/components/admin/components/auth/LoginView";
+import LoginView from "@/app/components/admin/auth/LoginView";
 
 export default function LoginPage() {
   return (

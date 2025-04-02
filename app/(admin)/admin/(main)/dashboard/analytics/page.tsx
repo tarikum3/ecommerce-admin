@@ -1,4 +1,4 @@
-import AnalyticsPage from "@/app/components/admin/components/dashboard/Analytics/AnalyticsPage";
+import AnalyticsPage from "@/app/components/admin/dashboard/Analytics/AnalyticsPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

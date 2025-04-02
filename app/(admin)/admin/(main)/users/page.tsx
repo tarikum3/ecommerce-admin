@@ -1,4 +1,4 @@
-import UserPage from "@/app/components/admin/components/user/UserPage";
+import UserPage from "@/app/components/admin/user/UserPage";
 
 import { Metadata } from "next";
 export const metadata: Metadata = {
