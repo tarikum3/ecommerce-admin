@@ -212,7 +212,7 @@ export default function SideBar() {
             ))}
           </nav>
         </div>
-        {/* <UserMenu /> */}
+        <UserMenu />
       </div>
     </div>
   );
