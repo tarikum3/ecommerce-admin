@@ -1,4 +1,9 @@
 import ForgotPassword from "@/app/components/admin/auth/ForgotPassword";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "forgot",
+};
 
 export default function ForgotPasswordPage() {
   return (
