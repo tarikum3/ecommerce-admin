@@ -13,7 +13,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 //import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
-import UserMenu from "@/app/components/admin/user/UserMenu";
+import UserMenu from "@/app/components/admin/user/usermenu";
 import { useTranslations } from "next-intl";
 import { useUI } from "@/app/components/admin/ui/UIContext";
 //import CloseIcon from "@mui/icons-material/Close";

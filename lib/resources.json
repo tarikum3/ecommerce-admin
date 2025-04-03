@@ -1,0 +1,113 @@
+[
+  // User Management Resources
+  {
+    "name": "Create User",
+    "description": "Permission to create new user accounts"
+  },
+  {
+    "name": "Read User",
+    "description": "Permission to view user details"
+  },
+  {
+    "name": "Update User",
+    "description": "Permission to modify user information"
+  },
+  {
+    "name": "Delete User",
+    "description": "Permission to remove user accounts"
+  },
+  {
+    "name": "Manage User Roles",
+    "description": "Permission to assign roles to users"
+  },
+
+  // Product Management Resources
+  {
+    "name": "Create Product",
+    "description": "Permission to add new products"
+  },
+  {
+    "name": "Read Product",
+    "description": "Permission to view product details"
+  },
+  {
+    "name": "Update Product",
+    "description": "Permission to modify product information"
+  },
+  {
+    "name": "Delete Product",
+    "description": "Permission to remove products"
+  },
+  {
+    "name": "Manage Inventory",
+    "description": "Permission to update product quantities"
+  },
+  {
+    "name": "Manage Product Variants",
+    "description": "Permission to edit product variations"
+  },
+
+  // Order Management Resources
+  {
+    "name": "View Orders",
+    "description": "Permission to access order listings"
+  },
+  {
+    "name": "Process Orders",
+    "description": "Permission to update order status"
+  },
+  {
+    "name": "Cancel Orders",
+    "description": "Permission to cancel customer orders"
+  },
+  {
+    "name": "Issue Refunds",
+    "description": "Permission to process order refunds"
+  },
+
+  // Customer Management Resources
+  {
+    "name": "View Customers",
+    "description": "Permission to access customer data"
+  },
+  {
+    "name": "Update Customer",
+    "description": "Permission to edit customer information"
+  },
+  {
+    "name": "Manage Customer Status",
+    "description": "Permission to mark customers as VIP/inactive"
+  },
+
+  // Content Management Resources
+  {
+    "name": "Manage Collections",
+    "description": "Permission to create/edit product collections"
+  },
+  {
+    "name": "Manage Images",
+    "description": "Permission to upload/edit product images"
+  },
+  {
+    "name": "Manage Product Options",
+    "description": "Permission to configure product variations"
+  },
+
+  // System Resources
+  {
+    "name": "View Dashboard",
+    "description": "Permission to access admin dashboard"
+  },
+  {
+    "name": "View Analytics",
+    "description": "Permission to view business reports"
+  },
+  {
+    "name": "Manage System Settings",
+    "description": "Permission to configure application settings"
+  },
+  {
+    "name": "Manage Notifications",
+    "description": "Permission to configure system notifications"
+  }
+]

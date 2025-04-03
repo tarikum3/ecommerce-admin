@@ -14,6 +14,7 @@ export const serviceApi = createApi({
     "Day",
     "Profile",
     "Notification",
+    "Role",
   ],
   endpoints: () => ({}),
 });

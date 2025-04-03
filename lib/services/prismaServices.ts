@@ -14,6 +14,7 @@ import fs from "fs";
 import bcrypt from "bcryptjs";
 import { addComputedCartPrices } from "@/lib/helper";
 import { z } from "zod";
+import resources from "@lib/resources.json";
 interface FetchProductsOptions {
   searchKey?: string;
   filter?: {
@@ -1822,6 +1823,172 @@ export async function updateSingleUserNotification(
     console.error("Error updating user notification:", error);
     throw new Error("Unable to update user notification.");
   }
+}
+
+type ResourceData = {
+  name: string;
+  description: string;
+};
+
+export async function initializeResources() {
+  try {
+    // Check if any resources exist
+    const existingCount = await prisma.resource.count();
+    if (existingCount > 0) {
+      return {
+        success: false,
+        message: "Resources already initialized",
+        count: existingCount,
+      };
+    }
+
+    // Create all resources from JSON
+    const createdResources = await prisma.$transaction(
+      resources.map((resource: ResourceData) =>
+        prisma.resource.create({
+          data: {
+            name: resource.name,
+            description: resource.description,
+          },
+        })
+      )
+    );
+
+    return {
+      success: true,
+      message: "Resources initialized successfully",
+      count: createdResources.length,
+    };
+  } catch (error) {
+    console.error("Error initializing resources:", error);
+    return {
+      success: false,
+      message: "Failed to initialize resources",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function createRole(
+  data: Prisma.RoleCreateInput & { resourceIds?: string[] }
+): Promise<
+  Prisma.RoleGetPayload<{
+    include: { resources: true };
+  }>
+> {
+  return await prisma.$transaction(async (tx) => {
+    const role = await tx.role.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        ...(data.resourceIds && {
+          resources: {
+            connect: data.resourceIds.map((id) => ({ id })),
+          },
+        }),
+      },
+      include: { resources: true },
+    });
+
+    return role;
+  });
+}
+
+export async function updateRole(
+  id: string,
+  data: Prisma.RoleUpdateInput & { resourceIds?: string[] }
+): Promise<
+  Prisma.RoleGetPayload<{
+    include: { resources: true };
+  }>
+> {
+  return await prisma.$transaction(async (tx) => {
+    // First update role fields
+    const role = await tx.role.update({
+      where: { id },
+      data: {
+        name: data.name,
+        description: data.description,
+      },
+      include: { resources: true },
+    });
+
+    // Then handle resources if provided
+    if (data.resourceIds) {
+      // Disconnect all existing resources
+      await tx.role.update({
+        where: { id },
+        data: {
+          resources: {
+            set: [],
+          },
+        },
+      });
+
+      // Connect new resources
+      await tx.role.update({
+        where: { id },
+        data: {
+          resources: {
+            connect: data.resourceIds.map((id) => ({ id })),
+          },
+        },
+        include: { resources: true },
+      });
+    }
+
+    return tx.role.findUniqueOrThrow({
+      where: { id },
+      include: { resources: true },
+    });
+  });
+}
+
+export async function getRoleById(id: string): Promise<Prisma.RoleGetPayload<{
+  include: { resources: true };
+}> | null> {
+  return await prisma.role.findUnique({
+    where: { id },
+    include: { resources: true },
+  });
+}
+
+// export async function fetchRoles(): Promise<
+//   Prisma.RoleGetPayload<{
+//     include: { resources: true };
+//   }>[]
+// > {
+//   return await prisma.role.findMany({
+//     include: { resources: true },
+//   });
+// }
+interface GetRolesParams {
+  page?: number;
+  limit?: number;
+  searchText?: string;
+}
+export async function fetchRoles(
+  params?: GetRolesParams
+): Promise<Prisma.RoleGetPayload<{ include: { resources: true } }>[]> {
+  const { page = 1, limit = 10, searchText = "" } = params || {};
+  const skip = (page - 1) * limit;
+
+  return await prisma.role.findMany({
+    skip,
+    take: limit,
+    where: {
+      OR: searchText
+        ? [
+            { name: { contains: searchText, mode: "insensitive" } },
+            { description: { contains: searchText, mode: "insensitive" } },
+          ]
+        : undefined,
+    },
+    include: { resources: true },
+    orderBy: { createdAt: "desc" },
+  });
 }
 
 async function checkmain() {
