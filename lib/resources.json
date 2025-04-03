@@ -1,5 +1,4 @@
 [
-  // User Management Resources
   {
     "name": "Create User",
     "description": "Permission to create new user accounts"
@@ -21,7 +20,6 @@
     "description": "Permission to assign roles to users"
   },
 
-  // Product Management Resources
   {
     "name": "Create Product",
     "description": "Permission to add new products"
@@ -47,7 +45,6 @@
     "description": "Permission to edit product variations"
   },
 
-  // Order Management Resources
   {
     "name": "View Orders",
     "description": "Permission to access order listings"
@@ -65,7 +62,6 @@
     "description": "Permission to process order refunds"
   },
 
-  // Customer Management Resources
   {
     "name": "View Customers",
     "description": "Permission to access customer data"
@@ -79,7 +75,6 @@
     "description": "Permission to mark customers as VIP/inactive"
   },
 
-  // Content Management Resources
   {
     "name": "Manage Collections",
     "description": "Permission to create/edit product collections"
