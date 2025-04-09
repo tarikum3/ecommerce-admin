@@ -13,9 +13,9 @@ export default function Overview() {
       <Suspense>
         <CustomersOverMonths />
       </Suspense>
-      <Suspense>
+      {/* <Suspense>
         <OrderStatusSummary />
-      </Suspense>
+      </Suspense> */}
       <Suspense>
         <OrdersOverMonths />
       </Suspense>
