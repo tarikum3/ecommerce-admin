@@ -7,7 +7,11 @@ export const authConfig = {
   providers: [],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
+      const isTokenExpired = auth?.expires
+        ? new Date(auth.expires) < new Date()
+        : false;
+      const isLoggedIn = !!auth?.user && !isTokenExpired; // Key change
+      // const isLoggedIn = !!auth?.user;
       console.log("nextUrl ", nextUrl);
       const isOnAuthPage = nextUrl.pathname.startsWith("/admin/auth");
       const isOnAdminOnly =
