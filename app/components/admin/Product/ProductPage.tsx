@@ -6,7 +6,7 @@ import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetProductsQuery } from "@/lib/admin/store/services/product.service";
 import { useTranslations } from "next-intl";
 import { Product } from "@/lib/admin/store/services/product.service";
-
+import CreateProduct from "@components/admin/Product/CreateProduct";
 const ProductPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -74,7 +74,7 @@ const ProductPage = () => {
     () => ({
       title: "Products",
       addTitle: "New Product",
-      onAdd: () => setModalOpen(true),
+     // onAdd: () => setModalOpen(true),
     }),
     []
   );
@@ -87,7 +87,7 @@ const ProductPage = () => {
 
   return (
     <>
-      {/* Modal for creating/editing a product */}
+     
       {modalOpen && (
         <ModalComponent
           open={modalOpen}
@@ -96,14 +96,15 @@ const ProductPage = () => {
           fullWidth={true}
         >
           {/* Add your product form here */}
-          <div>
+          {/* <div>
             <h2>Create Product</h2>
-            {/* Form fields for name, description, SKU, etc. */}
-          </div>
+            
+          </div> */}
+          <CreateProduct />
         </ModalComponent>
       )}
 
-      {/* Table for displaying products */}
+     
       <TablePage
         TableOptions={TableOptions}
         HeaderOptions={HeaderOptions}
