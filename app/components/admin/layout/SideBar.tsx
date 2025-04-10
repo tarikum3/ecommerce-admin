@@ -86,6 +86,12 @@ export default function SideBar() {
         icon: <GroupOutlinedIcon className="text-primary-500" />,
         route: ROUTES.CUSTOMERS,
       },
+      {
+        //  label: t("roles"), // Localized label
+        label: "role",
+        icon: <GroupOutlinedIcon className="text-primary-500" />,
+        route: ROUTES.ROLE,
+      },
     ]);
   }, [t]);
 

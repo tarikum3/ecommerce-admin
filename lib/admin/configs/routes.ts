@@ -5,5 +5,6 @@ export enum ROUTES {
   PRODUCT = "/admin/products",
   ORDER = "/admin/orders",
   CUSTOMERS = "/admin/customers",
+  ROLE = "/admin/role",
   PROFILE = "/admin/profile",
 }

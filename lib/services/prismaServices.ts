@@ -1,7 +1,7 @@
 import prisma, {
   Product,
   Collection,
-  EventLog,
+  //EventLog,
   Order,
   OrderStatus,
 } from "@lib/prisma";
@@ -82,93 +82,93 @@ export interface FetchEventsOptions {
   };
 }
 
-export async function fetchEvents(
-  options: FetchEventsOptions
-): Promise<{ events: EventLog[]; total: number }> {
-  const { searchKey, filter, pagination, sort } = options;
+// export async function fetchEvents(
+//   options: FetchEventsOptions
+// ): Promise<{ events: EventLog[]; total: number }> {
+//   const { searchKey, filter, pagination, sort } = options;
 
-  try {
-    const whereClause: any = {};
+//   try {
+//     const whereClause: any = {};
 
-    // Handle searchKey
-    if (searchKey) {
-      whereClause.OR = [
-        { resourceName: { contains: searchKey, mode: "insensitive" } },
-        { action: { contains: searchKey, mode: "insensitive" } },
-      ];
-    }
+//     // Handle searchKey
+//     if (searchKey) {
+//       whereClause.OR = [
+//         { resourceName: { contains: searchKey, mode: "insensitive" } },
+//         { action: { contains: searchKey, mode: "insensitive" } },
+//       ];
+//     }
 
-    // Handle filter
-    if (filter) {
-      if (filter.resourceName) {
-        whereClause.resourceName = filter.resourceName;
-      }
+//     // Handle filter
+//     if (filter) {
+//       if (filter.resourceName) {
+//         whereClause.resourceName = filter.resourceName;
+//       }
 
-      if (filter.action) {
-        whereClause.action = filter.action;
-      }
+//       if (filter.action) {
+//         whereClause.action = filter.action;
+//       }
 
-      if (filter.startDate) {
-        whereClause.createdAt = { gte: filter.startDate };
-      }
+//       if (filter.startDate) {
+//         whereClause.createdAt = { gte: filter.startDate };
+//       }
 
-      if (filter.endDate) {
-        whereClause.createdAt = whereClause.createdAt
-          ? { ...whereClause.createdAt, lte: filter.endDate }
-          : { lte: filter.endDate };
-      }
-    }
+//       if (filter.endDate) {
+//         whereClause.createdAt = whereClause.createdAt
+//           ? { ...whereClause.createdAt, lte: filter.endDate }
+//           : { lte: filter.endDate };
+//       }
+//     }
 
-    const orderBy = sort
-      ? {
-          [sort.field]: sort.order,
-        }
-      : { createdAt: "desc" as const };
+//     const orderBy = sort
+//       ? {
+//           [sort.field]: sort.order,
+//         }
+//       : { createdAt: "desc" as const };
 
-    // Handle pagination
-    let events: EventLog[];
-    const total = await prisma.eventLog.count({ where: whereClause });
+//     // Handle pagination
+//     let events: EventLog[];
+//     const total = await prisma.eventLog.count({ where: whereClause });
 
-    if (pagination) {
-      const page = pagination.page ?? 1;
-      const pageSize = pagination.pageSize ?? 10;
-      const skip = (page - 1) * pageSize;
-      const take = pageSize;
+//     if (pagination) {
+//       const page = pagination.page ?? 1;
+//       const pageSize = pagination.pageSize ?? 10;
+//       const skip = (page - 1) * pageSize;
+//       const take = pageSize;
 
-      events = await prisma.eventLog.findMany({
-        where: whereClause,
-        skip,
-        take,
-        orderBy: orderBy,
-        include: {
-          user: true,
-        },
-      });
-    } else {
-      // If no pagination is provided, fetch all events
-      events = await prisma.eventLog.findMany({
-        where: whereClause,
-        orderBy: orderBy,
-        include: {
-          user: true,
-        },
-      });
-    }
+//       events = await prisma.eventLog.findMany({
+//         where: whereClause,
+//         skip,
+//         take,
+//         orderBy: orderBy,
+//         include: {
+//           user: true,
+//         },
+//       });
+//     } else {
+//       // If no pagination is provided, fetch all events
+//       events = await prisma.eventLog.findMany({
+//         where: whereClause,
+//         orderBy: orderBy,
+//         include: {
+//           user: true,
+//         },
+//       });
+//     }
 
-    return { events, total };
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    throw new Error("Unable to fetch events.");
-  }
-}
-export async function fetchEventById(id: string) {
-  return await prisma.eventLog.findUnique({
-    where: { id },
-    include: {
-      user: true, // Include the user relation if needed
-    },
-  });
-}
+//     return { events, total };
+//   } catch (error) {
+//     console.error("Error fetching events:", error);
+//     throw new Error("Unable to fetch events.");
+//   }
+// }
+// export async function fetchEventById(id: string) {
+//   return await prisma.eventLog.findUnique({
+//     where: { id },
+//     include: {
+//       user: true, // Include the user relation if needed
+//     },
+//   });
+// }
 
 export async function fetchProducts(
   options: FetchProductsOptions
@@ -1832,19 +1832,29 @@ type ResourceData = {
 
 export async function initializeResources() {
   try {
-    // Check if any resources exist
-    const existingCount = await prisma.resource.count();
-    if (existingCount > 0) {
+    // Get all existing resources
+    const existingResources = await prisma.resource.findMany({
+      select: { name: true },
+    });
+    const existingResourceNames = new Set(existingResources.map((r) => r.name));
+
+    // Filter resources to only those that don't exist
+    const resourcesToCreate = resources.filter(
+      (resource: ResourceData) => !existingResourceNames.has(resource.name)
+    );
+
+    if (resourcesToCreate.length === 0) {
       return {
-        success: false,
-        message: "Resources already initialized",
-        count: existingCount,
+        success: true,
+        message: "All resources already exist",
+        count: existingResources.length,
+        created: 0,
       };
     }
 
-    // Create all resources from JSON
+    // Create only new resources
     const createdResources = await prisma.$transaction(
-      resources.map((resource: ResourceData) =>
+      resourcesToCreate.map((resource: ResourceData) =>
         prisma.resource.create({
           data: {
             name: resource.name,
@@ -1856,8 +1866,10 @@ export async function initializeResources() {
 
     return {
       success: true,
-      message: "Resources initialized successfully",
-      count: createdResources.length,
+      message: "New resources initialized successfully",
+      existingCount: existingResources.length,
+      createdCount: createdResources.length,
+      createdResources: createdResources.map((r) => r.name),
     };
   } catch (error) {
     console.error("Error initializing resources:", error);
@@ -1955,15 +1967,14 @@ export async function getRoleById(id: string): Promise<Prisma.RoleGetPayload<{
   });
 }
 
-// export async function fetchRoles(): Promise<
-//   Prisma.RoleGetPayload<{
-//     include: { resources: true };
-//   }>[]
-// > {
-//   return await prisma.role.findMany({
-//     include: { resources: true },
-//   });
-// }
+export async function fetchResources(): Promise<
+  Prisma.ResourceGetPayload<{
+    //include: { resources: true };
+  }>[]
+> {
+  await initializeResources();
+  return await prisma.resource.findMany();
+}
 interface GetRolesParams {
   page?: number;
   limit?: number;

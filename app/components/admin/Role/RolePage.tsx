@@ -6,7 +6,7 @@ import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetRolesQuery } from "@/lib/admin/store/services/role.service";
 import { useTranslations } from "next-intl";
 import { Role } from "@/lib/admin/store/services/role.service";
-
+import CreateRole from "@components/admin/Role/CreateRole";
 const RolePage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -119,68 +119,7 @@ const RolePage = () => {
           }}
           fullWidth={true}
         >
-          <div className="space-y-4">
-            {/* Role Form Fields */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium">Role Name</label>
-                <input
-                  type="text"
-                  defaultValue={selectedRole?.name || ""}
-                  className="w-full p-2 border rounded"
-                  placeholder="e.g., Administrator"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium">Description</label>
-                <input
-                  type="text"
-                  defaultValue={selectedRole?.description || ""}
-                  className="w-full p-2 border rounded"
-                  placeholder="Role description"
-                />
-              </div>
-            </div>
-
-            {/* Resource Permissions Section */}
-            <div className="mt-6">
-              <h3 className="text-lg font-medium">Resource Permissions</h3>
-              <div className="mt-2 space-y-2">
-                {/* This would be populated with available resources */}
-                {/* {selectedRole?.resources?.map(resource => (
-                  <div key={resource.id} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`resource-${resource.id}`}
-                      defaultChecked
-                      className="mr-2"
-                    />
-                    <label htmlFor={`resource-${resource.id}`}>
-                      {resource.name}
-                    </label>
-                  </div>
-                ))} */}
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-3 mt-6">
-              <button
-                onClick={() => setModalOpen(false)}
-                className="px-4 py-2 border rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  /* Save logic here */
-                }}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                {selectedRole ? "Update Role" : "Create Role"}
-              </button>
-            </div>
-          </div>
+          <CreateRole />
         </ModalComponent>
       )}
 
