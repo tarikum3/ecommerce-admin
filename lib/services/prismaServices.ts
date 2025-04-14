@@ -1972,8 +1972,11 @@ export async function fetchResources(): Promise<
     //include: { resources: true };
   }>[]
 > {
-  await initializeResources();
-  return await prisma.resource.findMany();
+  const resInit = await initializeResources();
+  console.log("sessionauthfromroleresInit", resInit);
+  const resAll = await prisma.resource.findMany();
+  console.log("sessionauthfromroleresresAll", resAll);
+  return resAll;
 }
 interface GetRolesParams {
   page?: number;
