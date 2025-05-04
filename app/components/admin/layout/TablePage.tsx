@@ -11,11 +11,13 @@ import PageHeader, {
 export interface TablePageProps {
   TableOptions?: CustomTableProps;
   HeaderOptions?: PageHeaderProps;
+  isLoading?: boolean;
 }
 
 const TablePage: React.FC<TablePageProps> = ({
   TableOptions,
   HeaderOptions,
+  isLoading,
 }) => {
   return (
     <section className="min-h-[calc(100vh-163px)] table-section text-primary-900 bg-primary-100 px-4 py-6">

@@ -174,7 +174,7 @@ const RolePage = () => {
       <TablePage
         // TableOptions={TableOptions}
         HeaderOptions={HeaderOptions}
-        // isLoading={isLoading}
+        isLoading={isLoading}
         //   isError={isError}
       />
     </>

@@ -158,7 +158,11 @@ const UserPage = () => {
       )}
 
       {/* Table for displaying users */}
-      <TablePage TableOptions={TableOptions} HeaderOptions={HeaderOptions} />
+      <TablePage
+        TableOptions={TableOptions}
+        HeaderOptions={HeaderOptions}
+        isLoading={isLoading}
+      />
     </>
   );
 };

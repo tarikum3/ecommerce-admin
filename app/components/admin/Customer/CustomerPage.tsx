@@ -115,7 +115,11 @@ const CustomerPage = () => {
       )}
 
       {/* Table for displaying customers */}
-      <TablePage TableOptions={TableOptions} HeaderOptions={HeaderOptions} />
+      <TablePage
+        TableOptions={TableOptions}
+        HeaderOptions={HeaderOptions}
+        isLoading={isLoading}
+      />
     </>
   );
 };

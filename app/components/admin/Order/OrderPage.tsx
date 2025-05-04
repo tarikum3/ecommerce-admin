@@ -117,7 +117,11 @@ const OrderPage = () => {
       )}
 
       {/* Table for displaying orders */}
-      <TablePage TableOptions={TableOptions} HeaderOptions={HeaderOptions} />
+      <TablePage
+        TableOptions={TableOptions}
+        HeaderOptions={HeaderOptions}
+        isLoading={isLoading}
+      />
     </>
   );
 };
