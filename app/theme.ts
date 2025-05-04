@@ -23,7 +23,7 @@ const baseTheme = {
       "Helvetica",
       "sans-serif",
     ].join(","),
-    fontSize: 16,
+    fontSize: 13,
   },
   components: {
     MuiCssBaseline: {
@@ -94,33 +94,33 @@ const baseTheme = {
     //     },
     //   },
     // },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          // backgroundColor: COLORS.primary[100],
-          borderRadius: "12px",
-          border: `1px solid ${COLORS.primary[500]}`,
-          color: COLORS.primary[900],
-          padding: "8px 24px",
-          width: "100%",
-          "&.Mui-focused": {
-            outline: "none",
-            boxShadow: `0 0 0 2px ${COLORS.primary[200]}`,
-          },
-          "&.Mui-disabled": {
-            backgroundColor: COLORS.primary[50],
-            cursor: "not-allowed",
-          },
-        },
-        input: {
-          padding: "8px 0",
-          "&::placeholder": {
-            color: COLORS.primary[400],
-            opacity: 1,
-          },
-        },
-      },
-    },
+    // MuiInputBase: {
+    //   styleOverrides: {
+    //     root: {
+    //       // backgroundColor: COLORS.primary[100],
+    //       borderRadius: "12px",
+    //       // border: `1px solid ${COLORS.primary[500]}`,
+    //       color: COLORS.primary[900],
+    //       // padding: "8px 24px",
+    //       width: "100%",
+    //       "&.Mui-focused": {
+    //         outline: "none",
+    //         //boxShadow: `0 0 0 2px ${COLORS.primary[200]}`,
+    //       },
+    //       "&.Mui-disabled": {
+    //         backgroundColor: COLORS.primary[50],
+    //         cursor: "not-allowed",
+    //       },
+    //     },
+    //     input: {
+    //       // padding: "8px 0",
+    //       "&::placeholder": {
+    //         color: COLORS.primary[400],
+    //         opacity: 1,
+    //       },
+    //     },
+    //   },
+    // },
     // MuiOutlinedInput: {
     //   styleOverrides: {
     //     notchedOutline: {
@@ -129,28 +129,28 @@ const baseTheme = {
     //   },
     // },
     // Checkbox styles
-    MuiCheckbox: {
-      styleOverrides: {
-        root: {
-          marginRight: "8px",
-          height: "16px",
-          width: "16px",
-          color: COLORS.primary[500],
-          "&.Mui-checked": {
-            color: COLORS.primary[900],
-          },
-        },
-      },
-    },
+    // MuiCheckbox: {
+    //   styleOverrides: {
+    //     root: {
+    //       marginRight: "8px",
+    //       height: "16px",
+    //       width: "16px",
+    //       color: COLORS.primary[500],
+    //       "&.Mui-checked": {
+    //         color: COLORS.primary[900],
+    //       },
+    //     },
+    //   },
+    // },
     // FormControlLabel styles
-    MuiFormControlLabel: {
-      styleOverrides: {
-        label: {
-          fontSize: "0.875rem",
-          color: COLORS.primary[900],
-        },
-      },
-    },
+    // MuiFormControlLabel: {
+    //   styleOverrides: {
+    //     label: {
+    //       //fontSize: "2.875rem",
+    //       color: COLORS.danger[900],
+    //     },
+    //   },
+    // },
   },
 };
 

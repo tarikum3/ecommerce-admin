@@ -1,18 +1,38 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import ModalComponent from "@components/admin/ui/ModalComponent";
+
 import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetRolesQuery } from "@/lib/admin/store/services/role.service";
 import { useTranslations } from "next-intl";
 import { Role } from "@/lib/admin/store/services/role.service";
-import CreateRole from "@components/admin/Role/CreateRole";
+
+import {
+  DeleteOutlineOutlined,
+  VisibilityOutlined,
+  EditOutlined,
+} from "@material-ui/icons";
+import { IconButton, Tooltip } from "@mui/material";
+import dynamic from "next/dynamic";
+import { ModalSkeleton } from "@components/admin/ui/Skeletons";
+
+const ModalComponent = dynamic(
+  () => import("@components/admin/ui/ModalComponent"),
+  {
+    loading: () => <ModalSkeleton />,
+    ssr: false,
+  }
+);
+const CreateRole = dynamic(() => import("@components/admin/Role/CreateRole"), {
+  // loading: () => <ModalSkeleton />,
+  ssr: false,
+});
 const RolePage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [{ pageIndex, pageSize }, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -54,16 +74,43 @@ const RolePage = () => {
       {
         label: "Actions",
         accessorKey: "actions",
-        cell: (row: Role) => (
-          <button
-            onClick={() => {
-              setSelectedRole(row);
-              setModalOpen(true);
-            }}
-            className="text-blue-600 hover:text-blue-800"
-          >
-            Edit
-          </button>
+        // cell: (row: Role) => (
+        //   <button
+        //     onClick={() => {
+        //       //setSelectedRole(row);
+        //       setSelectedRoleId(row.id);
+        //       setModalOpen(true);
+        //     }}
+        //     className="text-blue-600 hover:text-blue-800"
+        //   >
+        //     Edit
+        //   </button>
+        // ),
+        cell: (row: any) => (
+          <div className="flex">
+            <Tooltip title="Update Role">
+              <IconButton
+                onClick={() => {
+                  setSelectedRoleId(row.id);
+                  setModalOpen(true);
+                }}
+              >
+                <EditOutlined />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="View detail">
+              <IconButton onClick={() => {}}>
+                <VisibilityOutlined />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Delete Role">
+              <IconButton onClick={() => {}}>
+                <DeleteOutlineOutlined />
+              </IconButton>
+            </Tooltip>
+          </div>
         ),
       },
     ],
@@ -90,7 +137,7 @@ const RolePage = () => {
       title: "Roles",
       addTitle: "New Role",
       onAdd: () => {
-        setSelectedRole(null);
+        setSelectedRoleId(null);
         setModalOpen(true);
       },
     }),
@@ -111,21 +158,21 @@ const RolePage = () => {
           open={modalOpen}
           onClose={() => {
             setModalOpen(false);
-            setSelectedRole(null);
+            setSelectedRoleId(null);
           }}
           titles={{
-            title: selectedRole ? "Edit Role" : "Create Role",
+            title: selectedRoleId ? "Edit Role" : "Create Role",
             // subtitle: selectedRole ? "Update role details" : "Define a new role"
           }}
           fullWidth={true}
         >
-          <CreateRole />
+          <CreateRole roleId={selectedRoleId ?? undefined} />
         </ModalComponent>
       )}
 
       {/* Table for displaying roles */}
       <TablePage
-        TableOptions={TableOptions}
+        // TableOptions={TableOptions}
         HeaderOptions={HeaderOptions}
         // isLoading={isLoading}
         //   isError={isError}

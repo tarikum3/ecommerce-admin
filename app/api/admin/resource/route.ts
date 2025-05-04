@@ -14,5 +14,5 @@ export async function GET(req: NextRequest) {
   //const query = Object.fromEntries(searchParams);
   const resources = await fetchResources();
   // const resources = await fetchUserResources();
-  return NextResponse.json({ data: resources });
+  return NextResponse.json({ data: { resources } });
 }

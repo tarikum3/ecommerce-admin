@@ -18,9 +18,18 @@ export const resourceApi = serviceApi.injectEndpoints({
         });
 
         return {
-          url: `admin/role?${params.toString()}`,
+          url: `admin/resource?${params.toString()}`,
           method: "GET",
         };
+      },
+      transformResponse: (response: {
+        data: { resources: Resource[] };
+      }): Resource[] => {
+        if (response?.data?.resources) {
+          return response.data.resources;
+        }
+
+        return [];
       },
       // providesTags: ["Resource"],
     }),
@@ -30,6 +39,15 @@ export const resourceApi = serviceApi.injectEndpoints({
           url: `admin/resource`,
           method: "GET",
         };
+      },
+      transformResponse: (response: {
+        data: { resources: Resource[] };
+      }): Resource[] => {
+        if (response?.data?.resources) {
+          return response.data.resources;
+        }
+
+        return [];
       },
       // providesTags: ["Resource"],
     }),

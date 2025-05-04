@@ -60,6 +60,8 @@ model User {
   EventLog      EventLog[]
   sessions      Session[]
   userNotifications UserNotification[]
+  roleId        String?    
+  role          Role?      @relation(fields: [roleId], references: [id]) 
   @@index([email])
 }
 
@@ -442,6 +444,7 @@ model Role {
   description String?
   adminUsers  AdminUser[]  @relation("AdminUserRoles")
   resources   Resource[]   @relation("RoleResources")
+  users       User[] 
     createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 }

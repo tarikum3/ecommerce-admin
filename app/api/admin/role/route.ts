@@ -8,16 +8,16 @@ import {
 } from "@lib/services/prismaServices";
 import { auth } from "@/auth";
 export async function GET(req: NextRequest) {
-  const session = await auth();
-  console.log("sessionauthfromrole", session);
-  if (!session) {
-    return NextResponse.json({ message: "Unauthorized" });
-  }
+  // const session = await auth();
+  // console.log("sessionauthfromrole", session);
+  // if (!session) {
+  //   return NextResponse.json({ message: "Unauthorized" });
+  // }
   const searchParams = req.nextUrl.searchParams;
   const query = Object.fromEntries(searchParams);
   //const roles = await fetchRoles(query);
   const roles = await fetchRoles();
-  return NextResponse.json({ data: roles });
+  return NextResponse.json({ data: { roles } });
 }
 
 export async function POST(req: NextRequest) {

@@ -4,6 +4,7 @@ declare module "next-auth" {
   interface User {
     phone?: string | undefined;
     email?: string | undefined;
+    roleId?: string | undefined;
     id: string;
     firstName: string;
     lastName: string;

@@ -1,7 +1,7 @@
 {
   "dart.updateDevTools": false,
   "dart.checkForSdkUpdates": false,
-  "terminal.integrated.scrollback": 500,
+  "terminal.integrated.scrollback": 5000,
   "typescript.tsserver.maxTsServerMemory": 1072,
   "workbench.colorTheme": "Default Dark Modern",
   "gitlens.telemetry.enabled": false,

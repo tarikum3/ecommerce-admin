@@ -39,6 +39,13 @@ export const userApi = serviceApi.injectEndpoints({
         };
       },
       providesTags: ["User"],
+      transformResponse: (response: { data: { users: User[] } }): User[] => {
+        if (response?.data?.users) {
+          return response.data.users;
+        }
+
+        return [];
+      },
     }),
 
     // Get User by ID Query (uses the detailed UserDetails type)
@@ -47,6 +54,15 @@ export const userApi = serviceApi.injectEndpoints({
         url: `admin/user/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: {
+        data: { user: UserDetails };
+      }): UserDetails => {
+        // if (response?.data?.user) {
+        return response.data.user;
+        // }
+
+        //  return null;
+      },
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
 

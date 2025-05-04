@@ -194,7 +194,7 @@ export async function fetchProducts(
     //   supabase.storage.from("images").getPublicUrl(data.path).data.publicUrl
     // }`;
     // console.log("imageUrlimageUrl", imageUrl);
-    //await checkmain();
+
     const whereClause: any = {};
 
     if (searchKey) {
@@ -978,6 +978,96 @@ export async function getAdminUsers() {
   }
 }
 // Function to create a new customer
+interface FetchUsersOptions {
+  searchKey?: string;
+  filter?: {
+    userId?: string;
+    email?: string;
+    phone?: string;
+    roleId?: string;
+  };
+  pagination?: {
+    offset?: number;
+    limit?: number;
+  };
+  sort?: {
+    field: "createdAt" | "firstName" | "lastName" | "email";
+    order: "asc" | "desc";
+  };
+}
+
+// Define the User type (assuming it matches your Prisma model)
+type UserWithRelations = Prisma.UserGetPayload<{
+  include: {
+    accounts: true;
+    Customer: true;
+    role: true;
+    AdminUser: true;
+  };
+}>;
+
+export async function fetchUsers(
+  options: FetchUsersOptions
+): Promise<{ users: UserWithRelations[]; total: number }> {
+  const { searchKey, filter, pagination, sort } = options;
+  // await checkmain(
+  //   "20250414185517_new_nn",
+  //   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  // );
+  const where: Prisma.UserWhereInput = {};
+
+  // Search across multiple fields
+  if (searchKey) {
+    where.OR = [
+      { firstName: { contains: searchKey, mode: "insensitive" } },
+      { lastName: { contains: searchKey, mode: "insensitive" } },
+      { email: { contains: searchKey, mode: "insensitive" } },
+      { phone: { contains: searchKey, mode: "insensitive" } },
+    ];
+  }
+
+  // Apply filters
+  if (filter?.userId) {
+    where.id = filter.userId;
+  }
+
+  if (filter?.email) {
+    where.email = filter.email;
+  }
+
+  if (filter?.phone) {
+    where.phone = filter.phone;
+  }
+
+  if (filter?.roleId) {
+    where.roleId = filter.roleId;
+  }
+
+  // Define sorting
+  const orderBy: Prisma.UserOrderByWithRelationInput = sort
+    ? { [sort.field]: sort.order }
+    : { createdAt: "desc" };
+
+  // Fetch users with pagination
+  const users = await prisma.user.findMany({
+    where,
+    orderBy,
+    skip: pagination?.offset ?? 0,
+    take: pagination?.limit ?? 10,
+    include: {
+      accounts: true,
+      Customer: true,
+      role: true,
+      AdminUser: true,
+    },
+  });
+
+  // Get the total count of users matching the filters
+  const total = await prisma.user.count({ where });
+
+  return { users, total };
+}
+
 export async function createUser(data: CreateUserData) {
   try {
     // Hash the password
@@ -1061,7 +1151,14 @@ export async function updateUser(id: string, data: UpdateUserData) {
     throw new Error("Unable to update customer.");
   }
 }
-
+export async function getUserById(id: string): Promise<Prisma.UserGetPayload<{
+  include: { role: true };
+}> | null> {
+  return await prisma.user.findUnique({
+    where: { id },
+    include: { role: true },
+  });
+}
 interface LoginData {
   email: string;
   password: string;
@@ -1853,23 +1950,29 @@ export async function initializeResources() {
     }
 
     // Create only new resources
-    const createdResources = await prisma.$transaction(
-      resourcesToCreate.map((resource: ResourceData) =>
-        prisma.resource.create({
-          data: {
-            name: resource.name,
-            description: resource.description,
-          },
-        })
-      )
-    );
-
+    // const createdResources = await prisma.$transaction(
+    //   resourcesToCreate.map((resource: ResourceData) =>
+    //     prisma.resource.create({
+    //       data: {
+    //         name: resource.name,
+    //         description: resource.description,
+    //       },
+    //     })
+    //   )
+    // );
+    const createdResources = await prisma.resource.createMany({
+      data: resourcesToCreate.map((resource) => ({
+        name: resource.name,
+        description: resource.description,
+      })),
+      skipDuplicates: true, // optional
+    });
     return {
       success: true,
       message: "New resources initialized successfully",
-      existingCount: existingResources.length,
-      createdCount: createdResources.length,
-      createdResources: createdResources.map((r) => r.name),
+      // existingCount: existingResources.length,
+      // createdCount: createdResources.length,
+      // createdResources: createdResources.map((r) => r.name),
     };
   } catch (error) {
     console.error("Error initializing resources:", error);
@@ -1883,6 +1986,30 @@ export async function initializeResources() {
   }
 }
 
+// export async function createRole(
+//   data: Prisma.RoleCreateInput & { resourceIds?: string[] }
+// ): Promise<
+//   Prisma.RoleGetPayload<{
+//     include: { resources: true };
+//   }>
+// > {
+//   return await prisma.$transaction(async (tx) => {
+//     const role = await tx.role.create({
+//       data: {
+//         name: data.name,
+//         description: data.description,
+//         ...(data.resourceIds && {
+//           resources: {
+//             connect: data.resourceIds.map((id) => ({ id })),
+//           },
+//         }),
+//       },
+//       include: { resources: true },
+//     });
+
+//     return role;
+//   });
+// }
 export async function createRole(
   data: Prisma.RoleCreateInput & { resourceIds?: string[] }
 ): Promise<
@@ -1890,24 +2017,22 @@ export async function createRole(
     include: { resources: true };
   }>
 > {
-  return await prisma.$transaction(async (tx) => {
-    const role = await tx.role.create({
-      data: {
-        name: data.name,
-        description: data.description,
-        ...(data.resourceIds && {
-          resources: {
-            connect: data.resourceIds.map((id) => ({ id })),
-          },
-        }),
-      },
-      include: { resources: true },
-    });
-
-    return role;
+  // Simple create operation without transaction
+  const role = await prisma.role.create({
+    data: {
+      name: data.name,
+      description: data.description,
+      ...(data.resourceIds && {
+        resources: {
+          connect: data.resourceIds.map((id) => ({ id })),
+        },
+      }),
+    },
+    include: { resources: true },
   });
-}
 
+  return role;
+}
 export async function updateRole(
   id: string,
   data: Prisma.RoleUpdateInput & { resourceIds?: string[] }
@@ -1986,10 +2111,14 @@ interface GetRolesParams {
 export async function fetchRoles(
   params?: GetRolesParams
 ): Promise<Prisma.RoleGetPayload<{ include: { resources: true } }>[]> {
+  // await checkmain(
+  //   "20250414160331_rolee",
+  //   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  // );
   const { page = 1, limit = 10, searchText = "" } = params || {};
   const skip = (page - 1) * limit;
 
-  return await prisma.role.findMany({
+  const res = await prisma.role.findMany({
     skip,
     take: limit,
     where: {
@@ -2003,22 +2132,42 @@ export async function fetchRoles(
     include: { resources: true },
     orderBy: { createdAt: "desc" },
   });
+  console.log("fetchroles", res);
+  return res;
 }
 
-async function checkmain() {
+// async function checkmain() {
+//   // First, execute the SELECT query
+//   const selectResult = await prisma.$queryRaw`
+//     SELECT "id", "migration_name", "checksum"
+//     FROM "_prisma_migrations"
+//     WHERE "migration_name" = '20250219182035_new'
+//   `;
+//   console.log("Before Updateeee:", selectResult);
+
+//   // Now, execute the UPDATE query
+//   const updateResult = await prisma.$executeRaw`
+//     UPDATE "_prisma_migrations"
+//     SET "checksum" = '01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b'
+//     WHERE "migration_name" = '20250219182035_new'
+//   `;
+//   console.log("Update Result:", updateResult);
+// }
+
+async function checkmain(migration_name: string, checksum: string) {
   // First, execute the SELECT query
   const selectResult = await prisma.$queryRaw`
     SELECT "id", "migration_name", "checksum"
     FROM "_prisma_migrations"
-    WHERE "migration_name" = '20250219182035_new'
+    WHERE "migration_name" = ${migration_name}
   `;
-  console.log("Before Updateeee:", selectResult);
+  console.log("Before Update:", selectResult);
 
   // Now, execute the UPDATE query
   const updateResult = await prisma.$executeRaw`
     UPDATE "_prisma_migrations"
-    SET "checksum" = '01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b'
-    WHERE "migration_name" = '20250219182035_new'
+    SET "checksum" = ${checksum}
+    WHERE "migration_name" = ${migration_name}
   `;
   console.log("Update Result:", updateResult);
 }

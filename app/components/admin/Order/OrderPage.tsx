@@ -1,11 +1,20 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import ModalComponent from "@components/admin/ui/ModalComponent";
+
 import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetOrdersQuery } from "@/lib/admin/store/services/order.service";
 import { Order } from "@/lib/admin/store/services/order.service";
+import dynamic from "next/dynamic";
+import { ModalSkeleton } from "@components/admin/ui/Skeletons";
 
+const ModalComponent = dynamic(
+  () => import("@components/admin/ui/ModalComponent"),
+  {
+    loading: () => <ModalSkeleton />,
+    ssr: false,
+  }
+);
 const OrderPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -103,11 +112,7 @@ const OrderPage = () => {
           titles={{ title: "Create Order" }}
           fullWidth={true}
         >
-          {/* Add your order form here */}
-          <div>
-            <h2>Create Order</h2>
-            {/* Form fields for customer, items, total price, etc. */}
-          </div>
+          <></>
         </ModalComponent>
       )}
 

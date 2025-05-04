@@ -1,11 +1,20 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import ModalComponent from "@components/admin/ui/ModalComponent";
+
 import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetCustomersQuery } from "@/lib/admin/store/services/customer.service";
 import { Customer } from "@/lib/admin/store/services/customer.service";
+import dynamic from "next/dynamic";
+import { ModalSkeleton } from "@components/admin/ui/Skeletons";
 
+const ModalComponent = dynamic(
+  () => import("@components/admin/ui/ModalComponent"),
+  {
+    loading: () => <ModalSkeleton />,
+    ssr: false,
+  }
+);
 const CustomerPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -101,11 +110,7 @@ const CustomerPage = () => {
           titles={{ title: "Create Customer" }}
           fullWidth={true}
         >
-          {/* Add your customer form here */}
-          <div>
-            <h2>Create Customer</h2>
-            {/* Form fields for name, email, phone, etc. */}
-          </div>
+          <></>
         </ModalComponent>
       )}
 

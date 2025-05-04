@@ -1,13 +1,32 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import ModalComponent from "@components/admin/ui/ModalComponent";
+
 import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetUsersQuery } from "@/lib/admin/store/services/user.service";
 import { User } from "@/lib/admin/store/services/user.service";
+import { VisibilityOutlined } from "@material-ui/icons";
+import { IconButton, Tooltip } from "@mui/material";
+
+import dynamic from "next/dynamic";
+import { ModalSkeleton } from "@components/admin/ui/Skeletons";
+
+const ModalComponent = dynamic(
+  () => import("@components/admin/ui/ModalComponent"),
+  {
+    loading: () => <ModalSkeleton />,
+    ssr: false,
+  }
+);
+
+const UserDetail = dynamic(() => import("@components/admin/user/UserDetail"), {
+  // loading: () => <ModalSkeleton />,
+  ssr: false,
+});
 
 const UserPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
@@ -56,6 +75,36 @@ const UserPage = () => {
           <span>{new Date(row.createdAt).toLocaleDateString()}</span>
         ),
       },
+      {
+        label: "Actions",
+        accessorKey: "actions",
+        // cell: (row: Role) => (
+        //   <button
+        //     onClick={() => {
+        //       //setSelectedRole(row);
+        //       setSelectedRoleId(row.id);
+        //       setModalOpen(true);
+        //     }}
+        //     className="text-blue-600 hover:text-blue-800"
+        //   >
+        //     Edit
+        //   </button>
+        // ),
+        cell: (row: any) => (
+          <div className="flex">
+            <Tooltip title="View detail">
+              <IconButton
+                onClick={() => {
+                  setSelectedId(row.id);
+                  setModalOpen(true);
+                }}
+              >
+                <VisibilityOutlined />
+              </IconButton>
+            </Tooltip>
+          </div>
+        ),
+      },
     ],
     []
   );
@@ -91,18 +140,20 @@ const UserPage = () => {
   return (
     <>
       {/* Modal for creating/editing a user */}
+
       {modalOpen && (
         <ModalComponent
           open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          titles={{ title: "Create User" }}
+          onClose={() => {
+            setModalOpen(false);
+            setSelectedId(null);
+          }}
+          titles={{
+            title: "User Detail",
+          }}
           fullWidth={true}
         >
-          {/* Add your user form here */}
-          <div>
-            <h2>Create User</h2>
-            {/* Form fields for name, email, phone, etc. */}
-          </div>
+          {selectedId && <UserDetail userId={selectedId} />}
         </ModalComponent>
       )}
 

@@ -62,7 +62,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   session: {
     strategy: "jwt",
-    maxAge: 30 * 60, // 30 minutes expiration
+    maxAge: 60 * 60 * 24,
   },
 
   callbacks: {
@@ -114,6 +114,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.firstName = user.firstName;
         token.lastName = user.firstName;
+        token.roleId = user.roleId;
       }
 
       return token;
@@ -136,6 +137,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
           firstName: token.firstName as string,
           lastName: token.lastName as string,
+          roleId: token.roleId as string,
         },
         error: token.error,
       };

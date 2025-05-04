@@ -1,12 +1,29 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import ModalComponent from "@components/admin/ui/ModalComponent";
+
 import TablePage, { TablePageProps } from "@components/admin/layout/TablePage";
 import { useGetProductsQuery } from "@/lib/admin/store/services/product.service";
 import { useTranslations } from "next-intl";
 import { Product } from "@/lib/admin/store/services/product.service";
-import CreateProduct from "@components/admin/Product/CreateProduct";
+
+import dynamic from "next/dynamic";
+import { ModalSkeleton } from "@components/admin/ui/Skeletons";
+
+const ModalComponent = dynamic(
+  () => import("@components/admin/ui/ModalComponent"),
+  {
+    loading: () => <ModalSkeleton />,
+    ssr: false,
+  }
+);
+const CreateProduct = dynamic(
+  () => import("@components/admin/Product/CreateProduct"),
+  {
+    //loading: () => <ModalSkeleton />,
+    ssr: false,
+  }
+);
 const ProductPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
@@ -74,7 +91,7 @@ const ProductPage = () => {
     () => ({
       title: "Products",
       addTitle: "New Product",
-     // onAdd: () => setModalOpen(true),
+      // onAdd: () => setModalOpen(true),
     }),
     []
   );
@@ -87,7 +104,6 @@ const ProductPage = () => {
 
   return (
     <>
-     
       {modalOpen && (
         <ModalComponent
           open={modalOpen}
@@ -104,7 +120,6 @@ const ProductPage = () => {
         </ModalComponent>
       )}
 
-     
       <TablePage
         TableOptions={TableOptions}
         HeaderOptions={HeaderOptions}

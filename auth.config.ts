@@ -10,8 +10,9 @@ export const authConfig = {
       const isTokenExpired = auth?.expires
         ? new Date(auth.expires) < new Date()
         : false;
-      const isLoggedIn = !!auth?.user && !isTokenExpired; // Key change
+      const isLoggedIn = !!auth?.user && !isTokenExpired;
       // const isLoggedIn = !!auth?.user;
+      console.log("nextUrlauth", auth);
       console.log("nextUrl ", nextUrl);
       const isOnAuthPage = nextUrl.pathname.startsWith("/admin/auth");
       const isOnAdminOnly =
@@ -29,9 +30,9 @@ export const authConfig = {
       }
       if (isOnAuthPage) return true;
 
-      return false; // Redirect unauthenticated users to login page
+      // return false; // Redirect unauthenticated users to login page
 
-      // return true;
+      return true;
     },
   },
 } satisfies NextAuthConfig;

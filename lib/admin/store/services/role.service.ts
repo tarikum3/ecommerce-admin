@@ -40,15 +40,46 @@ export const roleApi = serviceApi.injectEndpoints({
           method: "GET",
         };
       },
+      transformResponse: (response: { data: { roles: Role[] } }): Role[] => {
+        if (response?.data?.roles) {
+          return response.data.roles;
+        }
+
+        return [];
+      },
       providesTags: ["Role"],
     }),
+    getAllRoles: builder.query<Role[], void>({
+      query: () => {
+        return {
+          url: `admin/role`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response: { data: { roles: Role[] } }): Role[] => {
+        if (response?.data?.roles) {
+          return response.data.roles;
+        }
 
+        return [];
+      },
+      // providesTags: ["Role"],
+    }),
     // Get single role with all relations
     getRoleById: builder.query<RoleDetails, string>({
       query: (id) => ({
         url: `admin/role/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: {
+        data: { role: RoleDetails };
+      }): RoleDetails => {
+        // if (response?.data?.role) {
+        return response.data.role;
+        // }
+
+        //  return null;
+      },
       providesTags: (result, error, id) => [{ type: "Role", id }],
     }),
 
@@ -123,6 +154,7 @@ export const {
   useCreateRoleMutation,
   useUpdateRoleMutation,
   useDeleteRoleMutation,
+  useGetAllRolesQuery,
   useAddRoleResourcesMutation,
   useRemoveRoleResourcesMutation,
 } = roleApi;

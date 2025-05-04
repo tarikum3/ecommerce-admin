@@ -7,15 +7,17 @@ import { useUI } from "@/app/components/admin/ui/UIContext";
 //import ToolBar from "@/app/components/admin/layout/Toolbar";
 import dynamic from "next/dynamic";
 
-const Loading = () => (
-  <div className="bg-primary-400 flex items-center space-x-4 px-8 h-full w-full"></div>
-);
+// const Loading = () => (
+//   <div className="bg-primary-400 flex items-center space-x-4 px-8 h-full w-full"></div>
+// );
 
-const dynamicProps = {
-  loading: Loading,
-};
+// const dynamicProps = {
+//   loading: Loading,
+// };
 const ToolBar = dynamic(() => import("@/app/components/admin/layout/Toolbar"), {
-  ...dynamicProps,
+  loading: () => (
+    <div className="bg-primary-400 flex items-center space-x-4 px-8 h-full w-full"></div>
+  ),
   ssr: false,
 });
 
