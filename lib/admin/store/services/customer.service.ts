@@ -19,11 +19,14 @@ interface GetCustomersParams {
   limit?: number;
   searchText?: string;
 }
-
+export interface GetCustomersResponse {
+  customers: Customer[];
+  total: number;
+}
 export const customerApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get Customers Query (uses the simpler Customer type)
-    getCustomers: builder.query<Customer[], GetCustomersParams>({
+    getCustomers: builder.query<GetCustomersResponse, GetCustomersParams>({
       query: ({ page = 1, limit = 10, searchText = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -35,6 +38,15 @@ export const customerApi = serviceApi.injectEndpoints({
           url: `admin/customer?${params.toString()}`,
           method: "GET",
         };
+      },
+      transformResponse: (response: {
+        data: GetCustomersResponse;
+      }): GetCustomersResponse => {
+        if (response?.data) {
+          return response.data;
+        }
+
+        return {} as any;
       },
       providesTags: ["Customer"],
     }),

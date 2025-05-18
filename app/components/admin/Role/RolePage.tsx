@@ -124,9 +124,9 @@ const RolePage = () => {
       pageSize: pageSize,
       // pageCount: Math.ceil((allRoles?.total || 0) / limit),
 
-      pageCount: allRoles?.length ?? 1,
+      pageCount: allRoles?.total ?? 1,
       setPagination: setPagination,
-      data: allRoles || [],
+      data: allRoles?.roles || [],
     }),
     [allRoles, tableColumns, pageIndex, pageSize, limit]
   );

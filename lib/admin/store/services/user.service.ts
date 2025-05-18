@@ -21,11 +21,14 @@ interface GetUsersParams {
   limit?: number;
   searchText?: string;
 }
-
+export interface GetUsersResponse {
+  users: User[];
+  total: number;
+}
 export const userApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get Users Query (uses the simpler User type)
-    getUsers: builder.query<User[], GetUsersParams>({
+    getUsers: builder.query<GetUsersResponse, GetUsersParams>({
       query: ({ page = 1, limit = 10, searchText = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -39,12 +42,14 @@ export const userApi = serviceApi.injectEndpoints({
         };
       },
       providesTags: ["User"],
-      transformResponse: (response: { data: { users: User[] } }): User[] => {
-        if (response?.data?.users) {
-          return response.data.users;
+      transformResponse: (response: {
+        data: GetUsersResponse;
+      }): GetUsersResponse => {
+        if (response?.data) {
+          return response.data;
         }
 
-        return [];
+        return {} as any;
       },
     }),
 

@@ -5,30 +5,26 @@ import { UserIcon } from "@/app/components/icons";
 import Clickoutside from "@/app/components/common/Clickoutside";
 import { useRouter, useSearchParams } from "next/navigation";
 import { logOut } from "@lib/actions/actions";
-interface User {
-  data: {
-    displayName: string;
-    photoURL?: string;
-  };
-  role?: string | string[];
-}
-
-const defaultUser: User = {
-  data: {
-    displayName: "tari",
-    photoURL: "",
-  },
-  role: "Guest",
-};
+import { useGetProfileQuery } from "@lib/admin/store/services/profile.service";
+import { useResource } from "@/app/components/common/SessionWrapper";
 
 export default function UserMenu() {
+  const resourcevalue = useResource();
+
   const [display, setDisplay] = useState(false);
+  const {
+    data: profileData,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+    error: profileError,
+  } = useGetProfileQuery();
   const router = useRouter();
   const userMenuClick = () => {
     if (!display) {
       setDisplay(true);
     }
   };
+  console.log("resourcecontextvaluep", profileData);
   return (
     <div className=" m-4 p-2 bg-primary-100 text-primary-900  shadow-md flex flex-col items-center relative">
       <button
@@ -39,10 +35,11 @@ export default function UserMenu() {
         <div className="flex items-center gap-3">
           <div className="text-left">
             <span className="block text-sm font-semibold">
-              {defaultUser.data.displayName}
+              {/* {defaultUser.data.displayName} */}
+              {profileData?.firstName}
             </span>
             <span className="text-xs font-medium text-primary-400">
-              {defaultUser.role}
+              {resourcevalue?.length > 0 ? "User" : "Guest"}
             </span>
           </div>
         </div>

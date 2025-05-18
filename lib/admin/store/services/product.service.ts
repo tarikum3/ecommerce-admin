@@ -24,6 +24,10 @@ export type ProductDetails = Prisma.ProductGetPayload<{
   };
 }>;
 
+export interface GetProductsResponse {
+  products: Product[];
+  total: number;
+}
 // Define the type for the query parameters
 interface GetProductsParams {
   page?: number;
@@ -34,7 +38,7 @@ interface GetProductsParams {
 export const productApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get Products Query (uses the simpler Product type)
-    getProducts: builder.query<Product[], GetProductsParams>({
+    getProducts: builder.query<GetProductsResponse, GetProductsParams>({
       query: ({ page = 1, limit = 10, searchText = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -48,13 +52,13 @@ export const productApi = serviceApi.injectEndpoints({
         };
       },
       transformResponse: (response: {
-        data: { products: Product[] };
-      }): Product[] => {
-        if (response?.data?.products) {
-          return response.data.products;
+        data: GetProductsResponse;
+      }): GetProductsResponse => {
+        if (response?.data) {
+          return response.data;
         }
 
-        return [];
+        return {} as any;
       },
       providesTags: ["Product"],
     }),

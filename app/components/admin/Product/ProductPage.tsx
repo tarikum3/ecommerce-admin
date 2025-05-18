@@ -79,9 +79,9 @@ const ProductPage = () => {
       columns: tableColumns,
       pageIndex: pageIndex,
       pageSize: pageSize,
-      pageCount: allProducts?.length ?? 1,
+      pageCount: allProducts?.total ?? 1,
       setPagination: setPagination,
-      data: allProducts ?? [],
+      data: allProducts?.products ?? [],
     }),
     [allProducts, tableColumns, pageIndex, pageSize]
   );

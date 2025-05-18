@@ -16,9 +16,4 @@ export default async function Page() {
   } else {
     redirect("/admin/profile");
   }
-  // return (
-  //   <>
-  //     <AnalyticsPage />
-  //   </>
-  // );
 }

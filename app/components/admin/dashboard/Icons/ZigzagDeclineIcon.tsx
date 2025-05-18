@@ -1,4 +1,3 @@
-// ZigzagDeclineIcon.tsx
 import React from "react";
 
 const ZigzagDeclineIcon: React.FC<{ className?: string }> = ({ className }) => {

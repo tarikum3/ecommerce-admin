@@ -29,7 +29,7 @@ const ThemeSwitcher = lazy(
 );
 const Toolbar = () => {
   return (
-    <div className="flex items-center space-x-4 px-8 h-full">
+    <div className="flex items-center space-x-4 h-full">
       <Suspense fallback={<div className="bg-primary-300 size-6"></div>}>
         <LanguageSwitcher />
       </Suspense>

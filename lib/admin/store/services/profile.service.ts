@@ -7,6 +7,13 @@ export const profileApi = serviceApi.injectEndpoints({
         url: `admin/profile`,
         method: "GET",
       }),
+      transformResponse: (response: any) => {
+        if (response?.data) {
+          return response.data;
+        }
+
+        return {} as any;
+      },
       providesTags: ["Profile"],
     }),
 

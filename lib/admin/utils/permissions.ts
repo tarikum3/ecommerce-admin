@@ -28,57 +28,12 @@ export const permissionArray = (
   }
 };
 
-// Function to return a value or default value based on user permissions
-// export const permissionsCondition = (
-//   permission: PERMISSIONS | PERMISSIONS[],
-//   value: any,
-//   permissions: any[],
-//   user?: User | null,
-//   defaultValue?: any,
-// ) => {
-
-//   if (user?.roleType === Role.superAdmin) {
-//     return value;
-//   }
-
-//   if (permission === PERMISSIONS.ALL) return value;
-
-//   if (Array.isArray(permission)) {
-//     return permission.some((item) => permissions.includes(item)) ? value : defaultValue || null;
-//   } else {
-//     return permissions.includes(permission) ? value : defaultValue || null;
-//   }
-// };
-
-// export const checkSinglePermission = (
-//   permission: PERMISSIONS | PERMISSIONS[],
-//   value: any,
-//   permissions: any[],
-//   user?: User | null,
-//   defaultValue?: any
-// ) => {
-
-//   if (user?.roleType === Role.superAdmin) {
-//     return value;
-//   }
-
-//   if (permission === PERMISSIONS.ALL) {
-//     return value;
-//   }
-
-//   if (Array.isArray(permission)) {
-//     return permission.some((perm) => permissions.includes(perm)) ? value : defaultValue || null;
-//   } else {
-//     return permissions.includes(permission) ? value : defaultValue || null;
-//   }
-// };
-
 export const hasPermission = (
   permission: PERMISSIONS | PERMISSIONS[],
   userPermissions: string[]
 ): boolean => {
   // If user has all permissions, return true immediately
-
+  // return true;
   if (userPermissions.includes("*")) {
     return true;
   }
@@ -93,8 +48,7 @@ export const hasPermission = (
     return permission.every((perm) => userPermissions.includes(perm));
   }
 
-  //return false;
-  return true;
+  return false;
 };
 
 // This version checks if user has ANY of the permissions (OR condition)

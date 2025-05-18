@@ -44,32 +44,30 @@ export const sorting: SortFilterItem[] = [
 ];
 
 export const primaryColors: Record<string, string> = {
-  "primary-900": "#111827",
-  "primary-800": "#1F2937",
-  "primary-700": "#374151",
-  "primary-600": "#4B5563",
-  "primary-500": "#6B7280",
-  "primary-400": "#9CA3AF",
-  "primary-300": "#D1D5DB",
-  "primary-200": "#E5E7EB",
-  "primary-100": "#FFFFFF",
+  "primary-900": "#0F172A",
+  "primary-800": "#1E293B",
+  "primary-700": "#334155",
+  "primary-600": "#475569",
+  "primary-500": "#64748B",
+  "primary-400": "#94A3B8",
+  "primary-300": "#CBD5E1",
+  "primary-200": "#E2E8F0",
+  "primary-100": "#F1F5F9",
 };
-
-
 
 export const COLORS = {
   primary: {
     0: "rgba(255, 255, 255)",
-    50: "rgb(234, 242, 249)",
-    100: "rgb(209, 227, 242)",
-    200: "rgb(173, 206, 232)",
-    300: "rgb(137, 185, 222)",
-    400: "rgb(101, 164, 212)",
-    500: "rgb(26, 74, 114)",
-    600: "rgb(22, 63, 97)",
-    700: "rgb(18, 52, 80)",
-    800: "rgb(14, 41, 63)",
-    900: "rgb(10, 30, 46)",
+    50: "rgb(248, 250, 252)",
+    100: "rgb(241, 245, 249)",
+    200: "rgb(226, 232, 240)",
+    300: "rgb(203, 213, 225)",
+    400: "rgb(148, 163, 184)",
+    500: "rgb(100, 116, 139)",
+    600: "rgb(71, 85, 105)",
+    700: "rgb(51, 65, 85)",
+    800: "rgb(30, 41, 59)",
+    900: "rgb(15, 23, 42)",
   },
   notification: {
     500: "rgb(89, 149, 148)",
@@ -99,4 +97,4 @@ export const COLORS = {
     800: "rgb(42, 102, 77)",
     900: "rgb(22, 82, 57)",
   },
-} as const;
+};

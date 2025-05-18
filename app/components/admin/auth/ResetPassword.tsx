@@ -31,7 +31,7 @@ export default function ResetPassword() {
     if (res.status === 200) {
       setMessage("success");
       // setModalView("LOGIN_VIEW");
-      router.push("/auth/login");
+      router.push("/admin/auth/login");
     } else {
       if (res.status === 400) {
         setMessage("Token is invalid or has expired");
@@ -90,7 +90,7 @@ export default function ResetPassword() {
             <a
               className="text-primary-900 font-bold hover:underline cursor-pointer ml-1"
               //onClick={() => setModalView("FORGOT_VIEW")}
-              href="/auth/forgot"
+              href="/admin/auth/forgot"
             >
               resend link
             </a>

@@ -79,9 +79,9 @@ const OrderPage = () => {
       columns: tableColumns,
       pageIndex: pageIndex,
       pageSize: pageSize,
-      pageCount: allOrders?.length ?? 1,
+      pageCount: allOrders?.total ?? 1,
       setPagination: setPagination,
-      data: allOrders ?? [],
+      data: allOrders?.orders ?? [],
     }),
     [allOrders, tableColumns, pageIndex, pageSize]
   );

@@ -11,7 +11,7 @@
 // }
 
 import LoginView from "@/app/components/admin/auth/LoginView";
-import AuthLayout from "@/app/components/admin/auth/AuthLayout";
+//import AuthLayout from "@/app/components/admin/auth/AuthLayout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 };
 export default function LoginPage() {
   return (
-    <AuthLayout>
-      <LoginView />
-    </AuthLayout>
+    // <AuthLayout>
+    <LoginView />
+    // </AuthLayout>
   );
 }

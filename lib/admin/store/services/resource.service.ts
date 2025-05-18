@@ -7,9 +7,13 @@ interface GetResourcesParams {
   limit?: number;
   searchText?: string;
 }
+export interface GetResourcesResponse {
+  resources: Resource[];
+  total: number;
+}
 export const resourceApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
-    getResources: builder.query<Resource[], GetResourcesParams>({
+    getResources: builder.query<GetResourcesResponse, GetResourcesParams>({
       query: ({ page = 1, limit = 10, searchText = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -23,13 +27,13 @@ export const resourceApi = serviceApi.injectEndpoints({
         };
       },
       transformResponse: (response: {
-        data: { resources: Resource[] };
-      }): Resource[] => {
-        if (response?.data?.resources) {
-          return response.data.resources;
+        data: GetResourcesResponse;
+      }): GetResourcesResponse => {
+        if (response?.data) {
+          return response.data;
         }
 
-        return [];
+        return {} as any;
       },
       // providesTags: ["Resource"],
     }),

@@ -9,7 +9,6 @@ import OrdersOverMonths from "@/app/components/admin/dashboard/overview/OrdersOv
 export default function Overview() {
   return (
     <div className="flex flex-col gap-10 text-primary ">
-      {/* Wrap CustomersOverMonths in Suspense with a fallback */}
       <Suspense>
         <CustomersOverMonths />
       </Suspense>

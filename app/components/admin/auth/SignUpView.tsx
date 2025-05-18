@@ -65,7 +65,7 @@ const SignUpView: FC = () => {
           <a
             className="text-primary-900  font-bold hover:underline cursor-pointer"
             //onClick={() => setModalView("LOGIN_VIEW")}
-            href="/auth/login"
+            href="/admin/auth/login"
           >
             Log In
           </a>

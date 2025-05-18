@@ -1,58 +1,3 @@
-
-
-// import { serviceApi } from './serviceApi';
-
-
-
-
-
-
-
-// export const orderApi = serviceApi.injectEndpoints({
-//     endpoints: (builder) => ({
-  
-//         getOrders: builder.query<any, any>({
-//           query: ({ page = 1, limit = 10, searchText = '' }) => ({
-//             url: `admin/order?page=${page}&limit=${limit}&searchText=${searchText}`,
-//             method: "GET",
-//           }),
-//           providesTags: ["Order", ],
-//         }),
-    
-//         createOrder: builder.mutation<any, any>({
-//           query: (order) => ({
-//             url: "admin/order",
-//             method: "POST",
-//             body: order,
-//           }),
-//           // transformResponse: (response: Order) => response.data.order,
-//           invalidatesTags: ["Order"],
-//         }),
-//         updateOrder: builder.mutation<
-//         any,
-//         any & { id: string }
-//       >({
-//         query: (order) => {
-//           let { id } = order;
-  
-//           return {
-//             url: `admin/order/${id}`,
-//             method: "PUT",
-//             body: order,
-//           };
-//         },
-  
-//         invalidatesTags: ["Order"],
-//       }),
-
-//       }),
-
-// })
-// export const { useGetOrdersQuery ,useCreateOrderMutation,useUpdateOrderMutation} = orderApi
-
-
-
-
 import { Prisma } from "@prisma/client";
 import { serviceApi } from "./serviceApi";
 
@@ -73,11 +18,14 @@ interface GetOrdersParams {
   limit?: number;
   searchText?: string;
 }
-
+export interface GetOrdersResponse {
+  orders: Order[];
+  total: number;
+}
 export const orderApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get Orders Query (uses the simpler Order type)
-    getOrders: builder.query<Order[], GetOrdersParams>({
+    getOrders: builder.query<GetOrdersResponse, GetOrdersParams>({
       query: ({ page = 1, limit = 10, searchText = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -89,6 +37,15 @@ export const orderApi = serviceApi.injectEndpoints({
           url: `admin/order?${params.toString()}`,
           method: "GET",
         };
+      },
+      transformResponse: (response: {
+        data: GetOrdersResponse;
+      }): GetOrdersResponse => {
+        if (response?.data) {
+          return response.data;
+        }
+
+        return {} as any;
       },
       providesTags: ["Order"],
     }),

@@ -2,7 +2,10 @@
 
 import React, { FC, memo, useCallback, useMemo, lazy, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { useUpdateNotificationMutation } from "@/lib/admin/store/services/notification.service";
+import {
+  useUpdateNotificationMutation,
+  UserNotification,
+} from "@/lib/admin/store/services/notification.service";
 
 // Lazy load icons
 const PersonIcon = lazy(() => import("@mui/icons-material/Person"));
@@ -22,17 +25,20 @@ interface Notification {
 }
 
 interface NotificationCardProps {
-  item: Notification;
+  item: UserNotification;
 }
 
 const NotificationCard: FC<NotificationCardProps> = memo(({ item }) => {
   const router = useRouter();
   const [updateNotification] = useUpdateNotificationMutation();
-
+  // const formatTime = (time: string) => {
+  //   const date = new Date(time);
+  //   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  // };
   const handleClick = useCallback(async () => {
     // Construct the default link based on the notification type
     let defaultLink = "";
-    switch (item.type) {
+    switch (item.notification.type) {
       case "NEW_PRODUCT":
         defaultLink = `/products/${item.id}`;
         break;
@@ -46,7 +52,7 @@ const NotificationCard: FC<NotificationCardProps> = memo(({ item }) => {
         defaultLink = "/notifications/default";
     }
 
-    const finalLink = item.link || defaultLink;
+    const finalLink = item.notification.link || defaultLink;
 
     // Only update the status if it's not already "OPENED"
     if (item.status !== "OPENED") {
@@ -67,13 +73,13 @@ const NotificationCard: FC<NotificationCardProps> = memo(({ item }) => {
 
   // Format the time to a human-readable format
   const formattedTime = useMemo(() => {
-    const date = new Date(item.time);
+    const date = new Date(item.createdAt);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  }, [item.time]);
+  }, [item.createdAt]);
 
   // Get the appropriate icon based on the notification type
   const getIcon = () => {
-    switch (item.type) {
+    switch (item.notification.type) {
       case "NEW_PRODUCT":
         return (
           <Suspense fallback={<div>Loading...</div>}>
@@ -116,15 +122,17 @@ const NotificationCard: FC<NotificationCardProps> = memo(({ item }) => {
           handleClick();
         }
       }}
-      aria-label={`Notification: ${item.title}`}
+      aria-label={`Notification: ${item.notification.title}`}
     >
       {/* Notification Icon */}
       <span className="text-2xl mr-4">{getIcon()}</span>
 
       {/* Notification Content */}
       <div className="flex-1">
-        <h3 className="text-sm font-semibold">{item.title}</h3>
-        <p className="text-xs text-primary-500">{item.description}</p>
+        <h3 className="text-sm font-semibold">{item.notification.title}</h3>
+        <p className="text-xs text-primary-500">
+          {item.notification.description}
+        </p>
         <p className="text-xs text-primary-400 mt-1">{formattedTime}</p>
       </div>
 

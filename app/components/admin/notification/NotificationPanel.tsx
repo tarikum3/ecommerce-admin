@@ -4,7 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { InfiniteLoader, List, AutoSizer } from "react-virtualized";
 import NotificationCard from "@/app/components/admin/notification/NotificationCard";
-import { useGetNotificationsQuery } from "@/lib/admin/store/services/notification.service";
+import {
+  useGetNotificationsQuery,
+  useUpdateUserNotificationsStatusMutation,
+  NotificationStatus,
+  UserNotification,
+} from "@/lib/admin/store/services/notification.service";
 
 interface Notification {
   id: string;
@@ -48,8 +53,8 @@ const notificationss = [
 
 const NotificationPanel = () => {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(1);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [limit, setLimit] = useState(10);
+  const [notifications, setNotifications] = useState<UserNotification[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
   const {
@@ -58,24 +63,24 @@ const NotificationPanel = () => {
     isError,
   } = useGetNotificationsQuery({ page, limit });
 
+  const [updateStatus, { isLoading: isUpdating }] =
+    useUpdateUserNotificationsStatusMutation();
   const router = useRouter();
-
+  console.log("notificationnndataa", notificationsData);
   useEffect(() => {
-    if (notificationsData) {
-      setNotifications((prev) => [...prev, ...notificationsData]);
-      setHasMore(notificationsData.length === limit);
+    if (notificationsData?.notifications) {
+      setNotifications((prev) => [
+        ...prev,
+        ...notificationsData?.notifications,
+      ]);
+      updateStatus({
+        newStatus: NotificationStatus.OPENED,
+        options: { page, limit },
+      });
+      // setHasMore(notificationsData?.notifications.length === limit);
     }
-    setNotifications((prev) => [...prev, ...(notificationss as any)]);
+    //setNotifications((prev) => [...prev, ...(notificationss as any)]);
   }, [notificationsData, limit]);
-
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, status: "OPENED" })));
-  };
-
-  const formatTime = (time: string) => {
-    const date = new Date(time);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
 
   const loadMoreNotifications = useCallback(() => {
     return new Promise<void>((resolve) => {
@@ -107,7 +112,7 @@ const NotificationPanel = () => {
         <NotificationCard
           item={{
             ...item,
-            time: formatTime(item.time),
+            // time: formatTime(item.time),
           }}
         />
       </div>
@@ -118,14 +123,6 @@ const NotificationPanel = () => {
     <div className="p-6 w-full mx-auto bg-primary-100  h-full">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Notifications</h2>
-        {notifications.some((n) => n.status !== "OPENED") && (
-          <button
-            onClick={markAllAsRead}
-            className="text-sm text-blue-500 hover:text-blue-700"
-          >
-            Mark all as read
-          </button>
-        )}
       </div>
 
       {notifications.length > 0 ? (
@@ -154,14 +151,14 @@ const NotificationPanel = () => {
               </InfiniteLoader>
             )}
           </AutoSizer>
-          {hasMore && (
+          {/* {hasMore && (
             <button
               onClick={loadMoreNotifications}
               className="w-full text-center py-2 text-blue-500 hover:text-blue-700"
             >
               View More
             </button>
-          )}
+          )} */}
         </div>
       ) : (
         <p className="text-primary-500 text-center">No new notifications.</p>

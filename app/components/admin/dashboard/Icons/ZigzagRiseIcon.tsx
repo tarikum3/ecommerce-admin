@@ -1,4 +1,3 @@
-// ZigzagRiseIcon.tsx
 import React from "react";
 
 const ZigzagRiseIcon: React.FC<{ className?: string }> = ({ className }) => {

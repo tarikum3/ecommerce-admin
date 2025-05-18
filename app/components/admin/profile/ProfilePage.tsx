@@ -110,58 +110,16 @@ export default function ProfileComponent() {
     setShowPasswordFields(false);
   };
 
-  // if (isProfileLoading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen">
-  //       <CircularProgress />
-  //     </div>
-  //   );
-  // }
-
-  // if (isProfileError) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen text-red-600">
-  //       Error loading profile:{" "}
-  //       {(profileError as any)?.data?.message || "Unknown error"}
-  //     </div>
-  //   );
-  // }
-
   return (
-    <div
-      className="min-h-screen p-8 "
-      style={{
-        fontFamily: "'Inter', sans-serif", // Modern sans-serif font
-      }}
-    >
-      <div
-        className="max-w-7xl mx-auto p-8 bg-primary-0 rounded-xl shadow-2xl"
-        style={{
-          boxShadow:
-            "0 10px 30px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <Typography
-          variant="h3"
-          className="text-4xl font-bold text-primary-900 mb-8"
-          style={{
-            fontFamily: "'Poppins', sans-serif", // Bold and modern font for headings
-          }}
-        >
-          My Profile
-        </Typography>
+    <div className="min-h-screen  ">
+      <div className="max-w-7xl mx-auto  bg-primary-0 ">
+        <h3 className="text-4xl font-bold text-primary-900 mb-8">My Profile</h3>
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
           {/* Personal Information Section */}
           <div className="space-y-6">
-            <Typography
-              variant="h5"
-              className="text-2xl font-semibold text-primary-800"
-              style={{
-                fontFamily: "'Poppins', sans-serif", // Semi-bold for section headings
-              }}
-            >
+            <h5 className="text-2xl font-semibold text-primary-800">
               Personal Information
-            </Typography>
+            </h5>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Controller
                 name="firstName"

@@ -2,20 +2,22 @@
 
 import React, { FC, useEffect, useRef, ReactElement, ReactNode } from "react";
 import Header from "@/app/components/admin/layout/Header";
-// import RightSideBar from "@/app/components/admin/layout/RightSideBar";
-// import SideBar from "@/app/components/admin/layout/SideBar";
+
 import { useUI } from "@/app/components/admin/ui/UIContext";
 import dynamic from "next/dynamic";
-
+import {
+  RightSideBarSkeleton,
+  SideBarSkeleton,
+} from "@components/admin/ui/Skeletons";
 const RightSideBar = dynamic(
   () => import("@/app/components/admin/layout/RightSideBar"),
   {
-    loading: () => <div className=""></div>,
+    loading: () => <RightSideBarSkeleton />,
     ssr: false,
   }
 );
 const SideBar = dynamic(() => import("@/app/components/admin/layout/SideBar"), {
-  loading: () => <div className=""></div>,
+  loading: () => <SideBarSkeleton />,
   ssr: false,
 });
 
@@ -27,17 +29,17 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const { displayRightSidebar, displayLeftSidebar } = useUI();
 
   return (
-    <div className="">
+    <div className="h-screen w-screen overflow-clip p-[1px]">
       <Header />
       <main
-        className={`mt-24 flex flex-col relative overflow-clip ${
+        className={`mt-24 p-2 flex flex-col relative overflow-clip ${
           displayLeftSidebar ? "lg:ml-[270px]" : "lg:ml-0"
         }`}
       >
         {children}
+        {/* "children" */}
       </main>
-      {/* <RightSideBar />
-      <SideBar /> */}
+
       {displayRightSidebar && <RightSideBar />}
       {displayLeftSidebar && <SideBar />}
     </div>

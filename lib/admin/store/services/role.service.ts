@@ -23,11 +23,14 @@ interface GetRolesParams {
   limit?: number;
   searchText?: string;
 }
-
+export interface GetRolesResponse {
+  roles: Role[];
+  total: number;
+}
 export const roleApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get paginated list of roles (basic info)
-    getRoles: builder.query<Role[], GetRolesParams>({
+    getRoles: builder.query<GetRolesResponse, GetRolesParams>({
       query: ({ page = 1, limit = 10, searchText = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
@@ -40,12 +43,14 @@ export const roleApi = serviceApi.injectEndpoints({
           method: "GET",
         };
       },
-      transformResponse: (response: { data: { roles: Role[] } }): Role[] => {
-        if (response?.data?.roles) {
-          return response.data.roles;
+      transformResponse: (response: {
+        data: GetRolesResponse;
+      }): GetRolesResponse => {
+        if (response?.data) {
+          return response.data;
         }
 
-        return [];
+        return {} as any;
       },
       providesTags: ["Role"],
     }),

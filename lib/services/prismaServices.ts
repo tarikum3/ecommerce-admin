@@ -1813,52 +1813,114 @@ export async function createNotificationForAllUsers(
   }
 }
 
+// export async function getUserNotifications(
+//   userId: string,
+//   options?: {
+//     status?: NotificationStatus; // Optional status filter
+//     page?: number; // Page number for pagination (default: 1)
+//     limit?: number; // Number of items per page (default: 10)
+//   }
+// ): Promise<{
+//   notifications: any[];
+//   total: number;
+//   page: number;
+//   limit: number;
+// }> {
+//   const { status , page = 1, limit = 10 } = options || {};
+
+//   try {
+//     // Calculate the `skip` value for pagination
+//     const skip = (page - 1) * limit;
+
+//     // Fetch paginated notifications
+//     const userNotifications = await prisma.userNotification.findMany({
+//       where: {
+//         userId,
+//         ...(status && { status }), // Filter by status if provided
+//       },
+//       include: {
+//         notification: true, // Include the associated Notification details
+//       },
+//       orderBy: {
+//         createdAt: "desc", // Sort by creation date (newest first)
+//       },
+//       skip, // Skip records for pagination
+//       take: limit, // Limit the number of records
+//     });
+
+//     // Get the total count of notifications (for pagination)
+//     const total = await prisma.userNotification.count({
+//       where: {
+//         userId,
+//         ...(status && { status }), // Apply the same status filter
+//       },
+//     });
+
+//     return {
+//       notifications: userNotifications,
+//       total,
+//       page,
+//       limit,
+//     };
+//   } catch (error) {
+//     console.error("Error fetching user notifications:", error);
+//     throw new Error("Unable to fetch user notifications.");
+//   }
+// }
 export async function getUserNotifications(
   userId: string,
   options?: {
-    status?: NotificationStatus; // Optional status filter
-    page?: number; // Page number for pagination (default: 1)
-    limit?: number; // Number of items per page (default: 10)
+    status?: NotificationStatus;
+    page?: number;
+    limit?: number;
   }
 ): Promise<{
   notifications: any[];
   total: number;
+  pendingCount: number; // New field
   page: number;
   limit: number;
 }> {
-  const { status = "PENDING", page = 1, limit = 10 } = options || {};
+  const { status, page = 1, limit = 10 } = options || {};
 
   try {
-    // Calculate the `skip` value for pagination
     const skip = (page - 1) * limit;
 
-    // Fetch paginated notifications
-    const userNotifications = await prisma.userNotification.findMany({
-      where: {
-        userId,
-        ...(status && { status }), // Filter by status if provided
-      },
-      include: {
-        notification: true, // Include the associated Notification details
-      },
-      orderBy: {
-        createdAt: "desc", // Sort by creation date (newest first)
-      },
-      skip, // Skip records for pagination
-      take: limit, // Limit the number of records
-    });
-
-    // Get the total count of notifications (for pagination)
-    const total = await prisma.userNotification.count({
-      where: {
-        userId,
-        ...(status && { status }), // Apply the same status filter
-      },
-    });
+    // Execute all database queries in parallel for better performance
+    const [userNotifications, total, pendingCount] = await Promise.all([
+      prisma.userNotification.findMany({
+        where: {
+          userId,
+          ...(status && { status }),
+        },
+        include: {
+          notification: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: limit,
+      }),
+      prisma.userNotification.count({
+        where: {
+          userId,
+          ...(status && { status }),
+        },
+      }),
+      // Additional query to get pending notifications count
+      prisma.userNotification.count({
+        where: {
+          userId,
+          status: "PENDING", // Explicitly count only pending notifications
+        },
+      }),
+    ]);
 
     return {
       notifications: userNotifications,
       total,
+      pendingCount, // Include the pending count in response
       page,
       limit,
     };
@@ -1868,6 +1930,55 @@ export async function getUserNotifications(
   }
 }
 
+export async function updateUserNotificationsStatus(
+  userId: string,
+  newStatus: NotificationStatus,
+  options?: {
+    page?: number;
+    limit?: number;
+    currentFilterStatus?: NotificationStatus; // Optional filter before update
+  }
+): Promise<{ count: number }> {
+  const { page = 1, limit = 10, currentFilterStatus } = options || {};
+  const skip = (page - 1) * limit;
+
+  try {
+    // First get the notification IDs for the current page
+    const userNotifications = await prisma.userNotification.findMany({
+      where: {
+        userId,
+        ...(currentFilterStatus && { status: currentFilterStatus }),
+      },
+      select: {
+        notificationId: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip,
+      take: limit,
+    });
+
+    const notificationIds = userNotifications.map((un) => un.notificationId);
+
+    // Update all matching notifications in a single transaction
+    const result = await prisma.userNotification.updateMany({
+      where: {
+        userId,
+        notificationId: { in: notificationIds },
+      },
+      data: {
+        status: newStatus,
+        // updatedAt: new Date(),
+      },
+    });
+
+    return { count: result.count };
+  } catch (error) {
+    console.error("Error updating user notifications:", error);
+    throw new Error("Unable to update user notifications");
+  }
+}
 export async function updateAllUserNotificationStatus(
   userId: string,
   currentStatus: NotificationStatus, // Current status to filter by

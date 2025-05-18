@@ -29,12 +29,19 @@ const LoginView: React.FC = () => {
           <div className="text-accent-danger-600 text-sm">{errorMessage}</div>
         )}
 
-        <Input type="email" id="email" name="email" placeholder="Email" />
+        <Input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          defaultValue="guest@example.com"
+        />
         <Input
           type="password"
           id="password"
           name="password"
           placeholder="Password"
+          defaultValue="password123"
         />
 
         <div className="flex justify-center pt-4">
@@ -72,7 +79,7 @@ const LoginView: React.FC = () => {
           <a
             className="text-primary-900 font-bold hover:underline cursor-pointer"
             // onClick={() => setModalView("SIGNUP_VIEW")}
-            href="/auth/signup"
+            href="/admin/auth/signup"
           >
             Sign Up
           </a>
@@ -80,7 +87,7 @@ const LoginView: React.FC = () => {
           <a
             className="text-primary-900 font-bold hover:underline cursor-pointer"
             //onClick={() => setModalView("FORGOT_VIEW")}
-            href="/auth/forgot"
+            href="/admin/auth/forgot"
           >
             Forgot password?
           </a>
