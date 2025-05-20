@@ -8,11 +8,6 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // const session = await auth();
-  // console.log("sessionauthfromrole", session);
-  // if (!session) {
-  //   return NextResponse.json({ message: "Unauthorized" });
-  // }
   const resources = await getUserResources();
 
   if (!hasPermission(PERMISSIONS.MANAGE_USER_ROLES, resources ?? [])) {

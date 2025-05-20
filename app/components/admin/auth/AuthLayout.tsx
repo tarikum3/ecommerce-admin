@@ -11,15 +11,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           {/* Floating card effect */}
           <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-sm">
             {/* Subtle pattern in background */}
-            <div className="absolute -z-10 inset-0 overflow-hidden opacity-5">
-              <div className="absolute -z-10 inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzc0MTUxIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNwYXR0ZXJuKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
-            </div>
+            <div className="absolute -z-10 inset-0 overflow-hidden opacity-5"></div>
 
-            {/* <h1 className="text-2xl font-bold text-primary-900 text-center mb-6">
-              {title}
-            </h1> */}
-
-            {/* Content */}
             {children}
 
             {/* Footer */}
@@ -33,9 +26,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Branding/attribution */}
-        <div className="mt-8 text-center text-sm text-primary-400">
+        {/* <div className="mt-8 text-center text-sm text-primary-400">
           © {new Date().getFullYear()} Your Company. All rights reserved.
-        </div>
+        </div> */}
       </div>
     </main>
   );

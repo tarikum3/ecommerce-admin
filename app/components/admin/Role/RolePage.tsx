@@ -172,7 +172,7 @@ const RolePage = () => {
 
       {/* Table for displaying roles */}
       <TablePage
-        // TableOptions={TableOptions}
+        TableOptions={TableOptions}
         HeaderOptions={HeaderOptions}
         isLoading={isLoading}
         //   isError={isError}

@@ -6,7 +6,7 @@ import { PERMISSIONS } from "@/lib/admin/configs/permissions";
 import { redirect } from "next/navigation";
 import { hasPermission } from "@/lib/admin/utils/permissions";
 export const metadata: Metadata = {
-  title: "orders",
+  title: "Orders",
 };
 
 export default async function Page() {

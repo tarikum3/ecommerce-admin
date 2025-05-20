@@ -24,16 +24,16 @@ const CustomersOverMonths = () => {
 
   const newCustomers = useMemo(() => {
     return (
-      // newCustomersData?.data ||
-      [
-        { month: "feb", new_customers: 5 },
-        { month: "mar", new_customers: 4 },
-        { month: "apr", new_customers: 4 },
-        { month: "mars", new_customers: 5 },
-        { month: "aprs", new_customers: 8 },
-        { month: "mar", new_customers: 4 },
-        { month: "aprdd", new_customers: 4 },
-      ]
+      newCustomersData?.data
+        // [
+        //   { month: "feb", new_customers: 5 },
+        //   { month: "mar", new_customers: 4 },
+        //   { month: "apr", new_customers: 4 },
+        //   { month: "mars", new_customers: 5 },
+        //   { month: "aprs", new_customers: 8 },
+        //   { month: "mar", new_customers: 4 },
+        //   { month: "aprdd", new_customers: 4 },
+        // ]
         // || [
         //   { month: "feb", new_customers: 5 },
         //   { month: "mar", new_customers: 4 },

@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { sendPasswordResetEmail } from "@lib/email";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "@lib/prisma";

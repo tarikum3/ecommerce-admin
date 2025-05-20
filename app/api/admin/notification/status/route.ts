@@ -11,8 +11,7 @@ export async function PUT(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ message: "Unauthorized" });
   }
-  // const reqData = await req.json();
-  // const Notifications = await updateUserNotificationsStatus( session.user.id as any,reqData);
+
   const reqData = await req.json();
 
   try {
@@ -29,6 +28,4 @@ export async function PUT(req: NextRequest) {
       { status: 500 }
     );
   }
-  //return NextResponse.json({ data: Notifications });
 }
-//export async function DELETE(req: NextRequest) {}

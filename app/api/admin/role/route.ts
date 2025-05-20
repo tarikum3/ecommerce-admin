@@ -11,11 +11,11 @@ import { getUserResources } from "@lib/dal";
 import { hasPermission } from "@/lib/admin/utils/permissions";
 import { PERMISSIONS } from "@/lib/admin/configs/permissions";
 export async function GET(req: NextRequest) {
-  // const session = await auth();
-  // console.log("sessionauthfromrole", session);
-  // if (!session) {
-  //   return NextResponse.json({ message: "Unauthorized" });
-  // }
+  const session = await auth();
+  console.log("sessionauthfromrole", session);
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" });
+  }
   const resources = await getUserResources();
 
   if (!hasPermission(PERMISSIONS.MANAGE_USER_ROLES, resources ?? [])) {

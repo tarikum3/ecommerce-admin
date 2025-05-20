@@ -1,5 +1,5 @@
-import createNextIntlPlugin from 'next-intl/plugin';
- 
+import createNextIntlPlugin from "next-intl/plugin";
+
 const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -10,9 +10,6 @@ const nextConfig = {
     // formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
-        // protocol: "https",
-        // hostname: "cdn.shopify.com",
-        // pathname: "/s/files/**",
         protocol: "https",
         hostname: "qvkdnhfbjppmzromhdae.supabase.co",
         pathname: "/storage/**",

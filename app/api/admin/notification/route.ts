@@ -36,9 +36,6 @@ const notificationss = [
 export async function GET(req: NextRequest) {
   const session = await auth();
 
-  // if (!session?.user.id) {
-  //   return NextResponse.json({ message: "Unauthorized" }, { status: 500 });
-  // }
   const searchParams = req.nextUrl.searchParams;
   // Map the parameters you need
   const query = Object.fromEntries(searchParams);
@@ -66,4 +63,3 @@ export async function PUT(req: NextRequest) {
 
   return NextResponse.json({ data: Notifications });
 }
-//export async function DELETE(req: NextRequest) {}
