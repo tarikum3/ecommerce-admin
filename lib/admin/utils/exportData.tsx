@@ -2,17 +2,6 @@
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
 
-// Export data function
-// export const exportData = (data: any[], fileName: string) => {
-//   const worksheet = XLSX.utils.json_to_sheet(data);
-//   const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
-//   const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-//   const blobData = new Blob([excelBuffer], {
-//     type: "application/octet-stream",
-//   });
-//   FileSaver.saveAs(blobData, `${fileName}.xlsx`);
-// };
-
 export const exportData = (
   data: any[],
   headers: string[],

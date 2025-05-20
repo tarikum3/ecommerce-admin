@@ -1,8 +1,5 @@
 import { PERMISSIONS } from "@/lib/admin/configs/permissions";
-// import { Role } from './enums';
-// import { User } from 'types/auth.type';
 
-// Function to return values based on user permissions
 export const permissionArray = (
   permission: PERMISSIONS | PERMISSIONS[],
   value: object | any[],

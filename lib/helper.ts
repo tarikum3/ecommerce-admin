@@ -1,4 +1,4 @@
-import prisma, { Product, Collection } from "@lib/prisma";
+import prisma, { Product } from "@lib/prisma";
 import { TAGS } from "@lib/const";
 import { deleteCookies } from "@lib/actions/actions";
 
