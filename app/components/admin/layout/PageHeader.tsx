@@ -8,9 +8,9 @@ export interface PageHeaderProps {
 
 const PageHeader = ({ title, addTilte, onAdd }: PageHeaderProps) => {
   return (
-    <section className=" space-y-6 p-6 sm:px-10 sm:py-8 lg:p-6 xl:px-10 xl:py-8 ">
+    <section className=" space-y-6  sm:px-10 lg:p-6 xl:px-10  ">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-primary-900 tracking-wide">
+        <h2 className="text-4xl font-bold text-primary-900 tracking-wide">
           {title}
         </h2>
         {onAdd && (

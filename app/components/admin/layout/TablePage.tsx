@@ -38,7 +38,7 @@ const TablePage: React.FC<TablePageProps> = ({
   isLoading,
 }) => {
   return (
-    <section className="min-h-[calc(100vh-163px)] table-section text-primary-900 px-4 py-6">
+    <section className="min-h-[calc(100vh-163px)] table-section text-primary-900 px-4 ">
       {HeaderOptions && <PageHeader {...HeaderOptions} />}
 
       <div className="w-full mt-6">
