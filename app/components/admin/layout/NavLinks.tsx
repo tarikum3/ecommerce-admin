@@ -189,7 +189,7 @@ const NavLinks = () => {
                           <div
                             className={`px-3 py-2 rounded-md transition-colors cursor-pointer text-sm font-medium ${
                               pathname === subConfig.route
-                                ? "bg-primary-700 text-primary-100"
+                                ? "bg-primary-500 text-primary-100"
                                 : "hover:bg-primary-500 hover:text-primary-100"
                             }`}
                           >
