@@ -21,7 +21,7 @@ const CustomersOverMonths = () => {
     },
     []
   );
-
+  console.log("newCustomersData", newCustomersData);
   const newCustomers = useMemo(() => {
     return (
       newCustomersData?.data
@@ -45,7 +45,7 @@ const CustomersOverMonths = () => {
         }))
     );
   }, [newCustomersData]);
-  console.log("newCustomersData", newCustomersData);
+
   return (
     <div className="bg-primary-0 text-primary-900  p-8 mx-auto rounded-lg shadow-sm w-full max-w-5xl">
       <div className="flex justify-between items-center mb-12">
