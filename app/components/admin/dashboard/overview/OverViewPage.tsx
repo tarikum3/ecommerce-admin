@@ -8,18 +8,16 @@ import OrdersOverMonths from "@/app/components/admin/dashboard/overview/OrdersOv
 
 export default function Overview() {
   return (
-    <div className="gap-10 text-primary p-1 border border-primary-900">
-      <CustomersOverMonths />
-      <OrdersOverMonths />
-      {/* <Suspense>
+    <div className="flex flex-col gap-10 text-primary ">
+      <Suspense>
         <CustomersOverMonths />
-      </Suspense> */}
+      </Suspense>
       {/* <Suspense>
         <OrderStatusSummary />
       </Suspense> */}
-      {/* <Suspense>
+      <Suspense>
         <OrdersOverMonths />
-      </Suspense> */}
+      </Suspense>
     </div>
   );
 }
