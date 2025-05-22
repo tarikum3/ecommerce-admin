@@ -39,13 +39,13 @@ const CustomersOverMonths = () => {
         //   { month: "mar", new_customers: 4 },
         //   { month: "apr", new_customers: 4 },
         // ]
-        .map((data: any) => ({
+        ?.map((data: any) => ({
           category: data.month,
           Customers: data.new_customers ?? 0,
         }))
     );
   }, [newCustomersData]);
-
+  console.log("newCustomersData", newCustomersData);
   return (
     <div className="bg-primary-0 text-primary-900  p-8 mx-auto rounded-lg shadow-sm w-full max-w-5xl">
       <div className="flex justify-between items-center mb-12">
@@ -62,7 +62,9 @@ const CustomersOverMonths = () => {
 
       {/* Chart Section */}
       <div className="flex flex-col gap-4 h-64  w-full max-w-5xl p-1">
-        <GenericAreaChart data={newCustomers} height={250} smooth grid />
+        {!isLoading && (
+          <GenericAreaChart data={newCustomers} height={250} smooth grid />
+        )}
       </div>
 
       {/* Loading State */}

@@ -14,9 +14,9 @@ const ThemeSwitcherIcon = () => {
       }}
     >
       {theme == "dark" ? (
-        <Moon className="size-6" />
+        <Moon className="size-6 text-primary-900" />
       ) : (
-        <Sun className="size-6" />
+        <Sun className="size-6 text-primary-900" />
       )}
     </IconButton>
   );
