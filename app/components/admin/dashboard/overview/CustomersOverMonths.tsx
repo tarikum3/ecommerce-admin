@@ -62,7 +62,7 @@ const CustomersOverMonths = () => {
 
       {/* Chart Section */}
       <div className="flex flex-col gap-4 h-64  w-full max-w-5xl p-1">
-        {!isLoading && (
+        {!isLoading && newCustomers && (
           <GenericAreaChart data={newCustomers} height={250} smooth grid />
         )}
       </div>
