@@ -13,6 +13,8 @@ const config: Config = {
         "8xl": "1920px",
       },
       colors: {
+        "primary-0": "var(--primary-0)",
+        "primary-50": "var(--primary-50)",
         "primary-100": "var(--primary-100)",
         "primary-200": "var(--primary-200)",
         "primary-300": "var(--primary-300)",
@@ -22,7 +24,6 @@ const config: Config = {
         "primary-700": "var(--primary-700)",
         "primary-800": "var(--primary-800)",
         "primary-900": "var(--primary-900)",
-
       },
       boxShadow: {
         "outline-normal": "0 0 0 2px var(--primary-300)",

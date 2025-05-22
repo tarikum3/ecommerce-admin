@@ -13,8 +13,9 @@ const NotificationIcon = () => {
   } = useGetNotificationsQuery({});
   return (
     <IconButton
-      className="w-10 h-10 border border-primary-800"
+      className="w-10 h-10 border border-primary-800 text-primary-900"
       onClick={openRightSidebar}
+      color="primary"
     >
       <Badge
         color="primary"
