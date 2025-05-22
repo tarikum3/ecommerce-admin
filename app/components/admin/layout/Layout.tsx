@@ -32,7 +32,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <div className="h-screen w-screen overflow-clip p-[1px]">
       <Header />
       <main
-        className={`mt-24 p-2 flex flex-col relative overflow-auto ${
+        className={`mt-24 h-4/5 p-2 flex flex-col relative overflow-auto ${
           displayLeftSidebar ? "lg:ml-[270px]" : "lg:ml-0"
         }`}
       >
