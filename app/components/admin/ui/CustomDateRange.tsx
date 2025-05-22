@@ -47,7 +47,7 @@ const CustomDateRangeComponent = ({ open, onChange, toggle, label }: Props) => {
       <div className="relative flex items-end  bg-primary-0 text-primary-700 w-full max-w-[200px] ml-auto rounded-[3px] text-md border border-primary-300 ">
         <div onClick={() => toggle(true)}>
           <div className="absolute w-7 h-7 inset-y-2 left-0 pl-3">
-            <CalendarMonthIcon />
+            <CalendarMonthIcon className="text-primary-900" />
           </div>
           <input
             //  className="ml-auto mr-4 min-w-[180px] text-sm w-full bg-primary-0 text-[#2C2E7B] max-w-[600px] pl-10 py-[12px] rounded-sm text-md outline-none focus:ring-[1px]"
