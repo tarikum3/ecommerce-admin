@@ -82,8 +82,6 @@ export interface FetchEventsOptions {
   };
 }
 
-
-
 export async function fetchProducts(
   options: FetchProductsOptions
 ): Promise<{ products: Product[]; total: number }> {
@@ -338,8 +336,6 @@ export async function updateCart(id: string, data: any) {
     where: { id },
     data,
   });
-
-  
 }
 
 export async function deleteCart(id: string) {
@@ -916,7 +912,7 @@ export async function fetchUsers(
 ): Promise<{ users: UserWithRelations[]; total: number }> {
   const { searchKey, filter, pagination, sort } = options;
   // await checkmain(
-  //   "20250414185517_new_nn",
+  //   "20250422125503_20250422125103_user_role_againn",
   //   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   // );
   const where: Prisma.UserWhereInput = {};
@@ -2002,7 +1998,6 @@ export async function initializeResources() {
   }
 }
 
-
 export async function createRole(
   data: Prisma.RoleCreateInput & { resourceIds?: string[] }
 ): Promise<
@@ -2147,7 +2142,7 @@ export async function fetchRoles(
 //   console.log("Update Result:", updateResult);
 // }
 
-async function checkmain(migration_name: string, checksum: string) {
+export async function checkmain(migration_name: string, checksum: string) {
   // First, execute the SELECT query
   const selectResult = await prisma.$queryRaw`
     SELECT "id", "migration_name", "checksum"
