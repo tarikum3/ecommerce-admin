@@ -139,6 +139,7 @@ const DateWrapper: React.FC<CustomTableProps> = ({
         <div className="relative bg-primary-0 text-primary-700 w-full max-w-48 ml-auto ">
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
+              className="text-primary-900"
               views={["year"]}
               label="Select Year"
               value={new Date(selectedYear, 0)}
