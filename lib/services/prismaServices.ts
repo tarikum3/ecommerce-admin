@@ -2159,3 +2159,35 @@ export async function checkmain(migration_name: string, checksum: string) {
   `;
   console.log("Update Result:", updateResult);
 }
+
+export async function uploadImageToSupabase(file: File) {
+  if (!file.name) {
+    throw new Error("File is missing a name");
+  }
+
+  const { data, error } = await supabase.storage
+    .from("images")
+    .upload(`public/${uuidv4()}-${file.name}`, file);
+
+  if (error) {
+    console.error("Error uploading image:", error.message);
+    throw new Error("Error uploading image");
+  }
+
+  return data;
+}
+
+export async function createTempImage(
+  filePath: string,
+  imageFor: string = "product"
+) {
+  const fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${filePath}`;
+
+  return await prisma.tempImage.create({
+    data: {
+      url: fileUrl,
+      imageFor,
+      supabaseId: filePath, // Using the path as ID since Supabase doesn't return a separate ID
+    },
+  });
+}

@@ -140,7 +140,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     },
     [setPagination]
   );
-
+  console.log("datafromexportpdffromtable", filteredData);
   return (
     <div className="container mx-auto p-4 w-full relative">
       {/* Loading indicator when sorting is in progress */}

@@ -9,7 +9,9 @@ import { Product } from "@/lib/admin/store/services/product.service";
 
 import dynamic from "next/dynamic";
 import { ModalSkeleton } from "@components/admin/ui/Skeletons";
-
+import { useResource } from "@/app/components/common/SessionWrapper";
+import { permissionArray, hasPermission } from "@/lib/admin/utils/permissions";
+import { PERMISSIONS } from "@/lib/admin/configs/permissions";
 const ModalComponent = dynamic(
   () => import("@components/admin/ui/ModalComponent"),
   {
@@ -39,6 +41,7 @@ const ProductPage = () => {
     isLoading,
     isError,
   } = useGetProductsQuery({ page, limit });
+  const permissions = useResource();
   console.log("allProductsallProducts", allProducts);
   // Table columns configuration
   const tableColumns = useMemo(
@@ -71,7 +74,7 @@ const ProductPage = () => {
         ),
       },
     ],
-    [allProducts, pageIndex, pageSize]
+    []
   );
 
   const TableOptions = useMemo(
@@ -91,7 +94,9 @@ const ProductPage = () => {
     () => ({
       title: "Products",
       addTitle: "New Product",
-      // onAdd: () => setModalOpen(true),
+      ...(hasPermission(PERMISSIONS.CREATE_PRODUCT, permissions) && {
+        onAdd: () => setModalOpen(true),
+      }),
     }),
     []
   );

@@ -30,9 +30,9 @@ export const authConfig = {
       }
       if (isOnAuthPage) return true;
 
-      return false; // Redirect unauthenticated users to login page
+      //  return false; // Redirect unauthenticated users to login page
 
-      //return true;
+      return true;
     },
   },
 } satisfies NextAuthConfig;

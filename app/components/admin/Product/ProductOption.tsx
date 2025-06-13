@@ -68,7 +68,8 @@ const ProductOption = ({
         ))}
         <Button
           variant="outlined"
-          onClick={() => append({ value: "" })}
+          // onClick={() => append("")}
+          onClick={() => append("")}
           startIcon={<AddIcon />}
           sx={{ mt: 1 }}
         >

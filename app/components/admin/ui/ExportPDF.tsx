@@ -27,7 +27,7 @@ const ExportPDF = memo(function ExportPDF({
   tooltipTitle = "Export to PDF",
 }: ExportPDFProps) {
   const [isExporting, setIsExporting] = useState(false);
-
+  console.log("datafromexportpdffromcomp", data);
   const exportPdfAsync = useCallback(async () => {
     try {
       const { exportPDF } = await import("@/lib/admin/utils/exportPDF");

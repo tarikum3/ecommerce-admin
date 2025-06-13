@@ -100,18 +100,18 @@ export const productApi = serviceApi.injectEndpoints({
     }),
 
     // Upload Product Image Mutation (if needed)
-    uploadProductImage: builder.mutation<any, { id: string; image: File }>({
-      query: ({ id, image }) => {
+    uploadProductImage: builder.mutation<any, { image: File }>({
+      query: ({ image }) => {
         const formData = new FormData();
         formData.append("image", image);
 
         return {
-          url: `admin/product/${id}/upload-image`,
+          url: `admin/product/uploadImage`,
           method: "POST",
           body: formData,
         };
       },
-      invalidatesTags: (result, error, { id }) => [{ type: "Product", id }],
+      //  invalidatesTags: (result, error, { id }) => [{ type: "Product", id }],
     }),
   }),
 });

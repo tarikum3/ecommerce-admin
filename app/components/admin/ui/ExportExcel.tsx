@@ -24,7 +24,7 @@ const ExportExcel = memo(function ExportExcel({
 }: ExportExcelProps) {
   const [isExporting, setIsExporting] = useState(false);
   // const [shouldExport, setShouldExport] = useState(false);
-
+  console.log("datafromexportexcelfromcomp", data);
   const exportDataAsync = useCallback(async () => {
     // setIsExporting(true);
     try {

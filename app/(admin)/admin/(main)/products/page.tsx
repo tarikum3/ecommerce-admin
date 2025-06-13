@@ -1,5 +1,5 @@
 import ProductPage from "@/app/components/admin/Product/ProductPage";
-
+//import ProductPage from "@/app/components/admin/Product/CreateProduct";
 import { Metadata } from "next";
 import { getUserResources } from "@lib/dal";
 import { PERMISSIONS } from "@/lib/admin/configs/permissions";

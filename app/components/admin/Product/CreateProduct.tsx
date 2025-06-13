@@ -21,7 +21,10 @@ import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useCreateProductMutation } from "@lib/admin/store/services/product.service";
+import {
+  useCreateProductMutation,
+  useUploadProductImageMutation,
+} from "@lib/admin/store/services/product.service";
 import ProductOptions from "./ProductOptions";
 import ProductVariant from "./ProductVariant";
 import ProductImages from "./ProductImages";
@@ -80,6 +83,7 @@ export type ProductFormData = z.infer<typeof productSchema>;
 
 const CreateProduct = () => {
   const [createProduct, { isLoading }] = useCreateProductMutation();
+  const [uploadProductImage] = useUploadProductImageMutation();
   const [imageInput, setImageInput] = useState("");
   const [tagInput, setTagInput] = useState("");
 
@@ -143,13 +147,15 @@ const CreateProduct = () => {
           },
         ]);
       }
-
-      return acc.flatMap((combo: any[]) =>
-        option.values.map((value: string) => [
+      if (!option.values.length) {
+        return acc;
+      }
+      return acc.flatMap((combo: any[]) => {
+        return option.values.map((value: string) => [
           ...combo,
           { optionName: option.name, value: value },
-        ])
-      );
+        ]);
+      });
     }, []);
     console.log("optionsssscombinations", combinations);
     return combinations.map((options: any[], index: number) => {
@@ -187,20 +193,17 @@ const CreateProduct = () => {
     }
   };
 
-  const handleAddImage = () => {
-    if (imageInput) {
-      const currentImages = getValues("images") || [];
-      setValue("images", [...currentImages, imageInput]);
-      setImageInput("");
+  const handleUpload = async (file: File) => {
+    try {
+      const result = await uploadProductImage({ image: file });
+      console.log("imageresult", result);
+      if ("data" in result) {
+        return result.data.url; // Extract and return just the URL string
+      }
+      throw new Error(result.error.toString()); // Convert error case to rejection
+    } catch (error) {
+      throw error; // Re-throw to maintain Promise<string> return type
     }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    const currentImages = getValues("images") || [];
-    setValue(
-      "images",
-      currentImages.filter((_, i) => i !== index)
-    );
   };
 
   const handleAddTag = () => {
@@ -447,7 +450,7 @@ const CreateProduct = () => {
         </Paper> */}
 
         {/* <ProductImages /> */}
-        <UploadImage />
+        <UploadImage onUpload={handleUpload} />
 
         <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6" gutterBottom>

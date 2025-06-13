@@ -12,6 +12,7 @@ export const exportPDF = ({
   startDate,
   endDate,
 }: any) => {
+  console.log("datafromexportPDF", data);
   const unit = "pt";
   const size = "A7"; // Use A1, A2, A3 or A4
   const orientation = "landscape"; // portrait or landscape

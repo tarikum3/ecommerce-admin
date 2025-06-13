@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   IconButton,
@@ -19,9 +19,10 @@ interface ImageType {
 
 interface UploadImageProps {
   defaultImages?: ImageType[];
-  onUpload?: (file: File) => Promise<string>; // Returns image URL
+  onUpload?: (file: File) => Promise<string>;
   onDelete?: (id: string) => void;
   onSetFeatured?: (id: string) => void;
+  onChange?: (images: ImageType[]) => void;
   title?: string;
   maxImages?: number;
 }
@@ -75,6 +76,7 @@ const UploadImage = ({
   onDelete,
   onSetFeatured,
   title = "Images",
+  onChange,
   maxImages,
 }: UploadImageProps) => {
   const [images, setImages] = useState<ImageType[]>(defaultImages);
@@ -134,6 +136,9 @@ const UploadImage = ({
     );
   };
 
+  useEffect(() => {
+    onChange?.(images);
+  }, [images, onChange]);
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" gutterBottom>

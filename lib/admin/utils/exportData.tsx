@@ -8,7 +8,7 @@ export const exportData = (
   fileName: string
 ) => {
   if (data.length === 0) return;
-
+  console.log("datafromexportexcel", data);
   // Map data to match the custom headers order
   const dataWithHeaders = [
     headers,
