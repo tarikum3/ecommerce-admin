@@ -82,11 +82,11 @@ const ProductPage = () => {
       columns: tableColumns,
       pageIndex: pageIndex,
       pageSize: pageSize,
-      pageCount: allProducts?.total ?? 1,
+      pageCount: allProducts?.totalPage ?? 1,
       setPagination: setPagination,
       data: allProducts?.products ?? [],
     }),
-    [allProducts, tableColumns, pageIndex, pageSize, allProducts?.products]
+    [allProducts, tableColumns, pageIndex, pageSize]
   );
 
   // Header options

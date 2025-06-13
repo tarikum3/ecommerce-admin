@@ -77,7 +77,7 @@ const CustomerPage = () => {
       columns: tableColumns,
       pageIndex: pageIndex,
       pageSize: pageSize,
-      pageCount: allCustomers?.total ?? 1,
+      pageCount: allCustomers?.totalPage ?? 1,
       setPagination: setPagination,
       data: allCustomers?.customers ?? [],
     }),

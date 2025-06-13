@@ -79,7 +79,7 @@ const OrderPage = () => {
       columns: tableColumns,
       pageIndex: pageIndex,
       pageSize: pageSize,
-      pageCount: allOrders?.total ?? 1,
+      pageCount: allOrders?.totalPage ?? 1,
       setPagination: setPagination,
       data: allOrders?.orders ?? [],
     }),

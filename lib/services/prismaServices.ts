@@ -3,6 +3,7 @@ import prisma, {
   Collection,
   //EventLog,
   Order,
+  Role,
   OrderStatus,
 } from "@lib/prisma";
 import { Prisma } from "@prisma/client";
@@ -84,7 +85,7 @@ export interface FetchEventsOptions {
 
 export async function fetchProducts(
   options: FetchProductsOptions
-): Promise<{ products: Product[]; total: number }> {
+): Promise<{ products: Product[]; total: number; totalPage: number }> {
   const { searchKey, filter, pagination, sort } = options;
 
   try {
@@ -142,10 +143,9 @@ export async function fetchProducts(
     // Handle pagination
     let products: Product[];
     const total = await prisma.product.count({ where: whereClause });
-
+    const page = pagination?.page ?? 1;
+    const pageSize = pagination?.pageSize ?? 10;
     if (pagination) {
-      const page = pagination.page ?? 1;
-      const pageSize = pagination.pageSize ?? 10;
       const skip = (page - 1) * pageSize;
       const take = pageSize;
 
@@ -190,8 +190,8 @@ export async function fetchProducts(
         },
       });
     }
-
-    return { products, total };
+    const totalPage = Math.ceil(total / pageSize);
+    return { products, total, totalPage };
   } catch (error) {
     console.error("Error fetching products:", error);
     throw new Error("Unable to fetch products.");
@@ -720,7 +720,7 @@ type Customer = Prisma.CustomerGetPayload<{
 }>;
 export async function fetchCustomers(
   options: FetchCustomersOptions
-): Promise<{ customers: Customer[]; total: number }> {
+): Promise<{ customers: Customer[]; total: number; totalPage: number }> {
   const { searchKey, filter, pagination, sort } = options;
 
   const where: Prisma.CustomerWhereInput = {};
@@ -755,12 +755,13 @@ export async function fetchCustomers(
     ? { [sort.field]: sort.order }
     : { createdAt: "desc" };
 
-  // Fetch customers with pagination
+  const limit = pagination?.limit ?? 10;
+  const offset = pagination?.offset ?? 10;
   const customers = await prisma.customer.findMany({
     where,
     orderBy,
-    skip: pagination?.offset ?? 0,
-    take: pagination?.limit ?? 10,
+    skip: offset,
+    take: limit,
     include: {
       user: true,
       orders: true,
@@ -769,8 +770,8 @@ export async function fetchCustomers(
 
   // Get the total count of customers matching the filters
   const total = await prisma.customer.count({ where });
-
-  return { customers, total };
+  const totalPage = Math.ceil(total / limit);
+  return { customers, total, totalPage };
 }
 
 // Define the FetchAdminUsersOptions interface
@@ -909,7 +910,7 @@ type UserWithRelations = Prisma.UserGetPayload<{
 
 export async function fetchUsers(
   options: FetchUsersOptions
-): Promise<{ users: UserWithRelations[]; total: number }> {
+): Promise<{ users: UserWithRelations[]; total: number; totalPage: number }> {
   const { searchKey, filter, pagination, sort } = options;
   // await checkmain(
   //   "20250422125503_20250422125103_user_role_againn",
@@ -948,13 +949,14 @@ export async function fetchUsers(
   const orderBy: Prisma.UserOrderByWithRelationInput = sort
     ? { [sort.field]: sort.order }
     : { createdAt: "desc" };
-
+  const limit = pagination?.limit ?? 10;
+  const offset = pagination?.offset ?? 10;
   // Fetch users with pagination
   const users = await prisma.user.findMany({
     where,
     orderBy,
-    skip: pagination?.offset ?? 0,
-    take: pagination?.limit ?? 10,
+    skip: offset,
+    take: limit,
     include: {
       accounts: true,
       Customer: true,
@@ -965,8 +967,8 @@ export async function fetchUsers(
 
   // Get the total count of users matching the filters
   const total = await prisma.user.count({ where });
-
-  return { users, total };
+  const totalPage = Math.ceil(total / limit);
+  return { users, total, totalPage };
 }
 
 export async function createUser(data: CreateUserData) {
@@ -1590,7 +1592,7 @@ interface FetchOrdersOptions {
 
 export async function fetchOrders(
   options: FetchOrdersOptions
-): Promise<{ orders: Order[]; total: number }> {
+): Promise<{ orders: Order[]; total: number; totalPage: number }> {
   const { searchKey, filter, pagination, sort } = options;
 
   const where: any = {};
@@ -1618,12 +1620,13 @@ export async function fetchOrders(
   const orderBy = sort
     ? { [sort.field]: sort.order === "asc" ? "asc" : "desc" }
     : ({ createdAt: "desc" } as const);
-
+  const limit = pagination?.limit ?? 10;
+  const offset = pagination?.offset ?? 10;
   const orders = await prisma.order.findMany({
     where,
     orderBy,
-    skip: pagination?.offset ?? 0,
-    take: pagination?.limit ?? 10,
+    skip: offset,
+    take: limit,
     include: {
       Customer: true,
       items: true,
@@ -1631,8 +1634,8 @@ export async function fetchOrders(
   });
 
   const total = await prisma.order.count({ where });
-
-  return { orders, total };
+  const totalPage = Math.ceil(total / limit);
+  return { orders, total, totalPage };
 }
 
 export enum NotificationType {
@@ -2098,30 +2101,36 @@ interface GetRolesParams {
 }
 export async function fetchRoles(
   params?: GetRolesParams
-): Promise<Prisma.RoleGetPayload<{ include: { resources: true } }>[]> {
+): Promise<{ roles: Role[]; total: number; totalPage: number }> {
   // await checkmain(
   //   "20250414160331_rolee",
   //   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   // );
+  const where: any = {};
+
   const { page = 1, limit = 10, searchText = "" } = params || {};
+  if (searchText) {
+    where.OR = searchText
+      ? [
+          { name: { contains: searchText, mode: "insensitive" } },
+          { description: { contains: searchText, mode: "insensitive" } },
+        ]
+      : undefined;
+  }
   const skip = (page - 1) * limit;
 
-  const res = await prisma.role.findMany({
+  const roles = await prisma.role.findMany({
     skip,
     take: limit,
-    where: {
-      OR: searchText
-        ? [
-            { name: { contains: searchText, mode: "insensitive" } },
-            { description: { contains: searchText, mode: "insensitive" } },
-          ]
-        : undefined,
-    },
+    where,
     include: { resources: true },
     orderBy: { createdAt: "desc" },
   });
-  console.log("fetchroles", res);
-  return res;
+  // console.log("fetchroles", res);
+  const total = await prisma.role.count({ where });
+  const totalPage = Math.ceil(total / limit);
+  //return res;
+  return { roles, total, totalPage };
 }
 
 // async function checkmain() {

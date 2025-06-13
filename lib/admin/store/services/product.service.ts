@@ -27,6 +27,7 @@ export type ProductDetails = Prisma.ProductGetPayload<{
 export interface GetProductsResponse {
   products: Product[];
   total: number;
+  totalPage: number;
 }
 // Define the type for the query parameters
 interface GetProductsParams {

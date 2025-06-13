@@ -23,9 +23,9 @@ export async function GET(req: NextRequest) {
   }
   const searchParams = req.nextUrl.searchParams;
   const query = Object.fromEntries(searchParams);
-  //const roles = await fetchRoles(query);
-  const roles = await fetchRoles();
-  return NextResponse.json({ data: { roles } });
+  const roles = await fetchRoles(query);
+  // const roles = await fetchRoles();
+  return NextResponse.json({ data: roles });
 }
 
 export async function POST(req: NextRequest) {

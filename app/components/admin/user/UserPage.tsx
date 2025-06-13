@@ -114,7 +114,7 @@ const UserPage = () => {
       columns: tableColumns,
       pageIndex: pageIndex,
       pageSize: pageSize,
-      pageCount: allUsers?.total ?? 1,
+      pageCount: allUsers?.totalPage ?? 1,
       setPagination: setPagination,
       data: allUsers?.users ?? [],
     }),

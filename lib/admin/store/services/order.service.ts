@@ -21,6 +21,7 @@ interface GetOrdersParams {
 export interface GetOrdersResponse {
   orders: Order[];
   total: number;
+  totalPage: number;
 }
 export const orderApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({

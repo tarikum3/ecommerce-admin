@@ -12,6 +12,7 @@ interface PaginationProps {
   pageIndex: number;
   pageCount: number;
   pageSize: number;
+  total?: number;
   onPageChange: (newPageIndex: number) => void;
   onPageSizeChange: (newPageSize: number) => void;
 }
@@ -83,7 +84,7 @@ const Pagination: React.FC<PaginationProps> = memo(
           onChange={handlePageSizeChange}
           inputProps={{
             min: 1,
-            className: "w-16 py-1",
+            className: "w-6 py-1",
           }}
           variant="outlined"
         />

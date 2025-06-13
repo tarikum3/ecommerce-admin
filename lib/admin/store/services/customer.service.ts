@@ -22,6 +22,7 @@ interface GetCustomersParams {
 export interface GetCustomersResponse {
   customers: Customer[];
   total: number;
+  totalPage: number;
 }
 export const customerApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({

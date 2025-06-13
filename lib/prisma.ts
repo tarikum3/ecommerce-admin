@@ -48,7 +48,7 @@ export type Order = Prisma.OrderGetPayload<{
     Customer: true;
   };
 }>;
-
+export type Role = Prisma.RoleGetPayload<{ include: { resources: true } }>;
 export type ProductVariant = Prisma.ProductVariantGetPayload<{
   include: {
     variantOptions: { include: { optionValue: { include: { option: true } } } };

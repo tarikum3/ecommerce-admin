@@ -24,6 +24,7 @@ interface GetUsersParams {
 export interface GetUsersResponse {
   users: User[];
   total: number;
+  totalPage: number;
 }
 export const userApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({

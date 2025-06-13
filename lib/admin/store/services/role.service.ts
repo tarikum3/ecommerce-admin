@@ -26,6 +26,7 @@ interface GetRolesParams {
 export interface GetRolesResponse {
   roles: Role[];
   total: number;
+  totalPage: number;
 }
 export const roleApi = serviceApi.injectEndpoints({
   endpoints: (builder) => ({
