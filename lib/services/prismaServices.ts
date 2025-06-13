@@ -143,7 +143,7 @@ export async function fetchProducts(
     let products: Product[];
     const total = await prisma.product.count({ where: whereClause });
 
-    if (pagination) {
+    if (!pagination) {
       const page = pagination.page ?? 1;
       const pageSize = pagination.pageSize ?? 10;
       const skip = (page - 1) * pageSize;
