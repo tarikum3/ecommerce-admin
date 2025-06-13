@@ -255,7 +255,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
       </div>
 
       {/* Pagination Section */}
-      {pageCount > 1 && (
+      {pageCount > 0 && (
         <div className={isPending ? "opacity-70" : ""}>
           <Pagination
             pageIndex={pageIndex}
