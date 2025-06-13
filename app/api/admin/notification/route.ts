@@ -35,19 +35,21 @@ const notificationss = [
 ];
 export async function GET(req: NextRequest) {
   const session = await auth();
-
+  if (!session?.user.id) {
+    return NextResponse.json({ message: "Unauthorized" });
+  }
   const searchParams = req.nextUrl.searchParams;
   // Map the parameters you need
   const query = Object.fromEntries(searchParams);
-  // const notifications = await getUserNotifications(session.user.id, query);
-  const notificationssample = {
-    notifications: notificationss,
-    total: 100,
-    pendingCount: 7,
-    page: query.page,
-    limit: query.limit,
-  };
-  return NextResponse.json({ data: notificationssample });
+  const notifications = await getUserNotifications(session.user.id, query);
+  // const notificationssample = {
+  //   notifications: notificationss,
+  //   total: 100,
+  //   pendingCount: 7,
+  //   page: query.page,
+  //   limit: query.limit,
+  // };
+  return NextResponse.json({ data: notifications });
 }
 export async function PUT(req: NextRequest) {
   const session = await auth();
