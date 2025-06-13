@@ -86,7 +86,7 @@ const ProductPage = () => {
       setPagination: setPagination,
       data: allProducts?.products ?? [],
     }),
-    [allProducts, tableColumns, pageIndex, pageSize]
+    [allProducts, tableColumns, pageIndex, pageSize, allProducts?.products]
   );
 
   // Header options

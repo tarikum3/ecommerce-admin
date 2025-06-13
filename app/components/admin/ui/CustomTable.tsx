@@ -83,7 +83,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
   const [orderBy, setOrderBy] = useState<string>("");
   const [isPending, startTransition] = useTransition();
   const [sortedData, setSortedData] = useState<any[]>(data);
-
+  console.log("customtabledata", data);
   // Memoized headers
   const headers = useMemo(() => columns.map((item) => item.label), [columns]);
 
