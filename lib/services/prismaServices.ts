@@ -86,7 +86,7 @@ export async function fetchProducts(
   options: FetchProductsOptions
 ): Promise<{ products: Product[]; total: number }> {
   const { searchKey, filter, pagination, sort } = options;
-
+  console.log("fetchProductsoptions", options);
   try {
     // const image = "t-shirt-1.png";
     // const imagePath = path.resolve("./public/assets", image);

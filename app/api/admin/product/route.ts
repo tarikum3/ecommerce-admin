@@ -15,7 +15,10 @@ export async function GET(req: NextRequest) {
   }
   const searchParams = req.nextUrl.searchParams;
   const query = Object.fromEntries(searchParams);
-  const products = await fetchProducts(query);
+  const products = await fetchProducts({
+    ...query,
+    pagination: { page: query?.page ?? 1, pageSize: query?.limit ?? 1 } as any,
+  });
   return NextResponse.json({ data: products });
 }
 
