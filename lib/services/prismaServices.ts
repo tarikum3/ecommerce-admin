@@ -86,7 +86,7 @@ export async function fetchProducts(
   options: FetchProductsOptions
 ): Promise<{ products: Product[]; total: number }> {
   const { searchKey, filter, pagination, sort } = options;
-  console.log("fetchProductsoptions", options);
+
   try {
     // const image = "t-shirt-1.png";
     // const imagePath = path.resolve("./public/assets", image);
@@ -143,11 +143,9 @@ export async function fetchProducts(
     let products: Product[];
     const total = await prisma.product.count({ where: whereClause });
 
-    if (!pagination) {
-      // const page = pagination?.page ?? 1;
-      // const pageSize = pagination?.pageSize ?? 10;
-      const page = 1;
-      const pageSize = 10;
+    if (pagination) {
+      const page = pagination.page ?? 1;
+      const pageSize = pagination.pageSize ?? 10;
       const skip = (page - 1) * pageSize;
       const take = pageSize;
 

@@ -15,11 +15,15 @@ export async function GET(req: NextRequest) {
   }
   const searchParams = req.nextUrl.searchParams;
   const query = Object.fromEntries(searchParams);
-  const products = await fetchProducts(query);
-  // const products = await fetchProducts({
-  //   ...query,
-  //   pagination: { page: query?.page ?? 1, pageSize: query?.limit ?? 1 } as any,
-  // });
+  // const products = await fetchProducts(query);
+  const products = await fetchProducts({
+    ...query,
+    pagination: {
+      page: Number(query?.page ?? 1),
+      pageSize: Number(query?.limit ?? 1),
+    },
+    // pagination: { page: 1, pageSize: 2 },
+  });
   return NextResponse.json({ data: products });
 }
 
