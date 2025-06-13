@@ -109,12 +109,12 @@ const NotificationPanel = () => {
     const item = notifications[index];
     return (
       <div key={key} style={style}>
-        <NotificationCard
+        {/* <NotificationCard
           item={{
             ...item,
             // time: formatTime(item.time),
           }}
-        />
+        /> */}
       </div>
     );
   };
