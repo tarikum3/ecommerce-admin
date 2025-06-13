@@ -111,7 +111,7 @@ export const exportPDF = ({
   // doc.setFontSize(10);
   //doc.text('Powered By : ', 40, 350);
 
-  doc.setTextColor(17, 24, 39);
+  doc.setTextColor(177, 124, 39);
   // doc.addImage('/assets/nedaj-logo.png', 'PNG', 30, 10, 150, 30);
   // styles: { overflow: 'linebreak' },
   doc.autoTable({
