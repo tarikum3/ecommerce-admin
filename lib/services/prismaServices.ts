@@ -702,8 +702,8 @@ interface FetchCustomersOptions {
     phone?: string;
   };
   pagination?: {
-    offset?: number;
-    limit?: number;
+    page?: number;
+    pageSize?: number;
   };
   sort?: {
     field: "createdAt" | "totalSpent" | "totalOrders";
@@ -754,14 +754,15 @@ export async function fetchCustomers(
   const orderBy: Prisma.CustomerOrderByWithRelationInput = sort
     ? { [sort.field]: sort.order }
     : { createdAt: "desc" };
-
-  const limit = pagination?.limit ?? 10;
-  const offset = pagination?.offset ?? 10;
+  const page = pagination?.page ?? 1;
+  const pageSize = pagination?.pageSize ?? 10;
+  const skip = (page - 1) * pageSize;
+  const take = pageSize;
   const customers = await prisma.customer.findMany({
     where,
     orderBy,
-    skip: offset,
-    take: limit,
+    skip,
+    take,
     include: {
       user: true,
       orders: true,
@@ -770,7 +771,7 @@ export async function fetchCustomers(
 
   // Get the total count of customers matching the filters
   const total = await prisma.customer.count({ where });
-  const totalPage = Math.ceil(total / limit);
+  const totalPage = Math.ceil(total / pageSize);
   return { customers, total, totalPage };
 }
 
@@ -889,8 +890,8 @@ interface FetchUsersOptions {
     roleId?: string;
   };
   pagination?: {
-    offset?: number;
-    limit?: number;
+    page?: number;
+    pageSize?: number;
   };
   sort?: {
     field: "createdAt" | "firstName" | "lastName" | "email";
@@ -949,14 +950,16 @@ export async function fetchUsers(
   const orderBy: Prisma.UserOrderByWithRelationInput = sort
     ? { [sort.field]: sort.order }
     : { createdAt: "desc" };
-  const limit = pagination?.limit ?? 10;
-  const offset = pagination?.offset ?? 10;
+  const page = pagination?.page ?? 1;
+  const pageSize = pagination?.pageSize ?? 10;
+  const skip = (page - 1) * pageSize;
+  const take = pageSize;
   // Fetch users with pagination
   const users = await prisma.user.findMany({
     where,
     orderBy,
-    skip: offset,
-    take: limit,
+    skip,
+    take,
     include: {
       accounts: true,
       Customer: true,
@@ -967,7 +970,7 @@ export async function fetchUsers(
 
   // Get the total count of users matching the filters
   const total = await prisma.user.count({ where });
-  const totalPage = Math.ceil(total / limit);
+  const totalPage = Math.ceil(total / pageSize);
   return { users, total, totalPage };
 }
 
@@ -1581,8 +1584,8 @@ interface FetchOrdersOptions {
     customerId?: string;
   };
   pagination?: {
-    offset?: number;
-    limit?: number;
+    page?: number;
+    pageSize?: number;
   };
   sort?: {
     field: "createdAt" | "totalPrice" | "status";
@@ -1620,13 +1623,15 @@ export async function fetchOrders(
   const orderBy = sort
     ? { [sort.field]: sort.order === "asc" ? "asc" : "desc" }
     : ({ createdAt: "desc" } as const);
-  const limit = pagination?.limit ?? 10;
-  const offset = pagination?.offset ?? 10;
+  const page = pagination?.page ?? 1;
+  const pageSize = pagination?.pageSize ?? 10;
+  const skip = (page - 1) * pageSize;
+  const take = pageSize;
   const orders = await prisma.order.findMany({
     where,
     orderBy,
-    skip: offset,
-    take: limit,
+    skip,
+    take,
     include: {
       Customer: true,
       items: true,
@@ -1634,7 +1639,7 @@ export async function fetchOrders(
   });
 
   const total = await prisma.order.count({ where });
-  const totalPage = Math.ceil(total / limit);
+  const totalPage = Math.ceil(total / pageSize);
   return { orders, total, totalPage };
 }
 
