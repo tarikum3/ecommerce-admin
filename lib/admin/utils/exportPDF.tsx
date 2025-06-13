@@ -60,16 +60,7 @@ export const exportPDF = ({
   let content = {
     startY: 80,
     head: headers,
-    // body: data,
-    body: [
-      {
-        Name: "Hoodie",
-        SKU: null,
-        Vendor: null,
-        Category: null,
-        "Available for Sale": true,
-      },
-    ],
+    body: data,
     theme: "grid",
     margin: { top: 50, bottom: 30 },
     tableLineColor: [229, 231, 235],
