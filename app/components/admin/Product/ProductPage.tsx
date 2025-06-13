@@ -51,28 +51,28 @@ const ProductPage = () => {
         accessorKey: "name",
         cell: (row: Product) => <span>{row.name}</span>,
       },
-      // {
-      //   label: "SKU",
-      //   accessorKey: "sku",
-      //   cell: (row: Product) => <span>{row.sku || "N/A"}</span>,
-      // },
-      // {
-      //   label: "Vendor",
-      //   accessorKey: "vendor",
-      //   cell: (row: Product) => <span>{row.vendor || "N/A"}</span>,
-      // },
-      // {
-      //   label: "Category",
-      //   accessorKey: "category",
-      //   cell: (row: Product) => <span>{row.category || "N/A"}</span>,
-      // },
-      // {
-      //   label: "Available for Sale",
-      //   accessorKey: "availableForSale",
-      //   cell: (row: Product) => (
-      //     <span>{row.availableForSale ? "Yes" : "No"}</span>
-      //   ),
-      // },
+      {
+        label: "SKU",
+        accessorKey: "sku",
+        cell: (row: Product) => <span>{row.sku || "N/A"}</span>,
+      },
+      {
+        label: "Vendor",
+        accessorKey: "vendor",
+        cell: (row: Product) => <span>{row.vendor || "N/A"}</span>,
+      },
+      {
+        label: "Category",
+        accessorKey: "category",
+        cell: (row: Product) => <span>{row.category || "N/A"}</span>,
+      },
+      {
+        label: "Available for Sale",
+        accessorKey: "availableForSale",
+        cell: (row: Product) => (
+          <span>{row.availableForSale ? "Yes" : "No"}</span>
+        ),
+      },
     ],
     []
   );
