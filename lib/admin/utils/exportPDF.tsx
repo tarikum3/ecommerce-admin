@@ -22,7 +22,7 @@ export const exportPDF = ({
   doc.setFontSize(10);
 
   // Set the color for the date range text
-  doc.setTextColor(177, 124, 39); // RGB color values for text
+  doc.setTextColor(17, 24, 39); // RGB color values for text
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -81,7 +81,7 @@ export const exportPDF = ({
     },
     bodyStyles: {
       fillColor: [255, 255, 255],
-      textColor: [144, 146, 46],
+      textColor: [44, 46, 46],
     },
     alternateRowStyles: {
       fillColor: [255, 255, 255],
@@ -111,7 +111,7 @@ export const exportPDF = ({
   // doc.setFontSize(10);
   //doc.text('Powered By : ', 40, 350);
 
-  doc.setTextColor(177, 124, 39);
+  doc.setTextColor(17, 24, 39);
   // doc.addImage('/assets/nedaj-logo.png', 'PNG', 30, 10, 150, 30);
   // styles: { overflow: 'linebreak' },
   doc.autoTable({
