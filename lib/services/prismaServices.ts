@@ -908,15 +908,87 @@ type UserWithRelations = Prisma.UserGetPayload<{
     AdminUser: true;
   };
 }>;
+type UserWithRelationsWithoutPassword = Omit<
+  Prisma.UserGetPayload<{
+    include: {
+      accounts: true;
+      Customer: true;
+      role: true;
+      AdminUser: true;
+    };
+  }>,
+  "password"
+>;
+// export async function fetchUsers(
+//   options: FetchUsersOptions
+// ): Promise<{ users: UserWithRelations[]; total: number; totalPage: number }> {
+//   const { searchKey, filter, pagination, sort } = options;
 
+//   const where: Prisma.UserWhereInput = {};
+
+//   // Search across multiple fields
+//   if (searchKey) {
+//     where.OR = [
+//       { firstName: { contains: searchKey, mode: "insensitive" } },
+//       { lastName: { contains: searchKey, mode: "insensitive" } },
+//       { email: { contains: searchKey, mode: "insensitive" } },
+//       { phone: { contains: searchKey, mode: "insensitive" } },
+//     ];
+//   }
+
+//   // Apply filters
+//   if (filter?.userId) {
+//     where.id = filter.userId;
+//   }
+
+//   if (filter?.email) {
+//     where.email = filter.email;
+//   }
+
+//   if (filter?.phone) {
+//     where.phone = filter.phone;
+//   }
+
+//   if (filter?.roleId) {
+//     where.roleId = filter.roleId;
+//   }
+
+//   // Define sorting
+//   const orderBy: Prisma.UserOrderByWithRelationInput = sort
+//     ? { [sort.field]: sort.order }
+//     : { createdAt: "desc" };
+//   const page = pagination?.page ?? 1;
+//   const pageSize = pagination?.pageSize ?? 10;
+//   const skip = (page - 1) * pageSize;
+//   const take = pageSize;
+//   // Fetch users with pagination
+//   const users = await prisma.user.findMany({
+//     where,
+//     orderBy,
+//     skip,
+//     take,
+//     include: {
+//       accounts: true,
+//       Customer: true,
+//       role: true,
+//       AdminUser: true,
+//     },
+//   });
+
+//   // Get the total count of users matching the filters
+//   const total = await prisma.user.count({ where });
+//   const totalPage = Math.ceil(total / pageSize);
+//   return { users, total, totalPage };
+// }
 export async function fetchUsers(
   options: FetchUsersOptions
-): Promise<{ users: UserWithRelations[]; total: number; totalPage: number }> {
+): Promise<{
+  users: UserWithRelationsWithoutPassword[];
+  total: number;
+  totalPage: number;
+}> {
   const { searchKey, filter, pagination, sort } = options;
-  // await checkmain(
-  //   "20250422125503_20250422125103_user_role_againn",
-  //   "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  // );
+
   const where: Prisma.UserWhereInput = {};
 
   // Search across multiple fields
@@ -950,30 +1022,44 @@ export async function fetchUsers(
   const orderBy: Prisma.UserOrderByWithRelationInput = sort
     ? { [sort.field]: sort.order }
     : { createdAt: "desc" };
+
   const page = pagination?.page ?? 1;
   const pageSize = pagination?.pageSize ?? 10;
   const skip = (page - 1) * pageSize;
   const take = pageSize;
-  // Fetch users with pagination
+
+  // Fetch users with pagination (excluding password)
   const users = await prisma.user.findMany({
     where,
     orderBy,
     skip,
     take,
-    include: {
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      roleId: true,
+      createdAt: true,
+      updatedAt: true,
+      emailVerified: true,
+      image: true,
+      // Include all your relations
       accounts: true,
       Customer: true,
       role: true,
       AdminUser: true,
+      // Explicitly exclude password by not including it
     },
   });
 
   // Get the total count of users matching the filters
   const total = await prisma.user.count({ where });
   const totalPage = Math.ceil(total / pageSize);
+
   return { users, total, totalPage };
 }
-
 export async function createUser(data: CreateUserData) {
   try {
     // Hash the password
