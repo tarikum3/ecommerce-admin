@@ -245,24 +245,221 @@ export async function fetchProductBySlug(slug: string) {
   return product;
 }
 
-export async function createProduct(data: any) {
+// export async function createProduct(data: any) {
+//   const { images, variants, price, options, ...productData } = data;
+//   const slug = convertToSlug(data.name);
+//   try {
+//     const newProduct = await prisma.product.create({
+//       data: {
+//         ...productData,
+//         slug,
+//         images: images ? { create: images } : undefined,
+//         variants: variants ? { create: variants } : undefined,
+//         price: price ? { create: price } : undefined,
+//         options: options ? { create: options } : undefined,
+//       },
+//       include: {
+//         images: true,
+//         variants: true,
+//         price: true,
+//         options: true,
+//       },
+//     });
+
+//     return newProduct;
+//   } catch (error) {
+//     console.error("Error creating product:", error);
+//     throw new Error("Failed to create product");
+//   }
+// }
+
+export type ProductFormData = {
+  name: string;
+  description: string;
+  sku?: string;
+  vendor?: string;
+  tags?: string[];
+  category?: string;
+  slug: string;
+  availableForSale: boolean;
+  price: {
+    amount: number;
+    currency: string;
+  };
+  images: string[]; // Array of image URLs
+  options: {
+    name: string;
+    values: string[];
+  }[];
+  variants: {
+    name: string;
+    price: number;
+    quantity: number;
+    availableForSale: boolean;
+    selectedOptions: {
+      optionName: string;
+      value: string;
+    }[];
+  }[];
+};
+
+// export async function createProduct(data: ProductFormData) {
+//   const { images, variants, price, options, ...productData } = data;
+//   const slug = convertToSlug(data.name);
+
+//   try {
+//     const newProduct = await prisma.product.create({
+//       data: {
+//         ...productData,
+//         slug,
+//         availableForSale: productData.availableForSale || false,
+//         images: {
+//           create: images.map((url) => ({ url })),
+//         },
+//         price: {
+//           create: {
+//             amount: price.amount,
+//             currency: price.currency,
+//           },
+//         },
+//         options: {
+//           create: options.map((option) => ({
+//             name: option.name,
+//             values: {
+//               create: option.values.map((value) => ({ value })),
+//             },
+//           })),
+//         },
+//         variants: {
+//           create: variants.map((variant) => ({
+//             name: variant.name,
+//             price: variant.price,
+//             quantity: variant.quantity,
+//             availableForSale: variant.availableForSale || false,
+//             variantOptions: {
+//               create: variant.selectedOptions.map((option) => ({
+//                 optionName: option.optionName,
+//                 value: option.value,
+//               })),
+//             },
+//           })),
+//         },
+//       },
+//       include: {
+//         images: true,
+//         variants: {
+//           include: {
+//             variantOptions: true,
+//           },
+//         },
+//         price: true,
+//         options: {
+//           include: {
+//             values: true,
+//           },
+//         },
+//       },
+//     });
+
+//     return newProduct;
+//   } catch (error) {
+//     console.error("Error creating product:", error);
+//     throw new Error("Failed to create product");
+//   }
+// }
+
+export async function createProduct(data: ProductFormData) {
   const { images, variants, price, options, ...productData } = data;
   const slug = convertToSlug(data.name);
+
   try {
     const newProduct = await prisma.product.create({
       data: {
         ...productData,
         slug,
-        images: images ? { create: images } : undefined,
-        variants: variants ? { create: variants } : undefined,
-        price: price ? { create: price } : undefined,
-        options: options ? { create: options } : undefined,
+        availableForSale: productData.availableForSale || false,
+        images: {
+          create: images.map((url) => ({ url })),
+        },
+        price: {
+          create: {
+            amount: price.amount,
+            currency: price.currency,
+          },
+        },
+        options: {
+          create: options.map((option) => ({
+            name: option.name,
+            values: {
+              create: option.values.map((value) => ({ value })),
+            },
+          })),
+        },
+        variants: {
+          create: await Promise.all(
+            variants.map(async (variant) => {
+              // For each selected option in the variant, find the corresponding option value ID
+              const variantOptionsCreates = await Promise.all(
+                variant.selectedOptions.map(async (selectedOption) => {
+                  // Find the option value that matches both option name and value
+                  const optionValue = await prisma.productOptionValue.findFirst(
+                    {
+                      where: {
+                        value: selectedOption.value,
+                        option: {
+                          name: selectedOption.optionName,
+                          product: { slug }, // Ensure we're getting values from this product
+                        },
+                      },
+                    }
+                  );
+
+                  if (!optionValue) {
+                    throw new Error(
+                      `Option value not found for ${selectedOption.optionName}: ${selectedOption.value}`
+                    );
+                  }
+
+                  return {
+                    optionValue: { connect: { id: optionValue.id } },
+                  };
+                })
+              );
+
+              return {
+                name: variant.name,
+                price: variant.price,
+                quantity: variant.quantity,
+                availableForSale: variant.availableForSale || false,
+                variantOptions: {
+                  create: variantOptionsCreates,
+                },
+              };
+            })
+          ),
+        },
       },
       include: {
         images: true,
-        variants: true,
+        variants: {
+          include: {
+            variantOptions: {
+              include: {
+                optionValue: {
+                  include: {
+                    option: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         price: true,
-        options: true,
+        options: {
+          include: {
+            values: true,
+          },
+        },
       },
     });
 
@@ -980,9 +1177,7 @@ type UserWithRelationsWithoutPassword = Omit<
 //   const totalPage = Math.ceil(total / pageSize);
 //   return { users, total, totalPage };
 // }
-export async function fetchUsers(
-  options: FetchUsersOptions
-): Promise<{
+export async function fetchUsers(options: FetchUsersOptions): Promise<{
   users: UserWithRelationsWithoutPassword[];
   total: number;
   totalPage: number;
@@ -1191,76 +1386,76 @@ export async function login(data: LoginData) {
   }
 }
 
-export async function placeOrder(cartId: string) {
-  return await prisma.$transaction(async (tx) => {
-    // Fetch Cart and Items
-    const cart = await tx.cart.findUnique({
-      where: { id: cartId },
-      include: { items: { include: { variant: true } } },
-    });
+// export async function placeOrder(cartId: string) {
+//   return await prisma.$transaction(async (tx) => {
+//     // Fetch Cart and Items
+//     const cart = await tx.cart.findUnique({
+//       where: { id: cartId },
+//       include: { items: { include: { variant: true } } },
+//     });
 
-    if (!cart || cart.items.length === 0) {
-      throw new Error("Cart not found or empty");
-    }
-    const userId = cart.userId;
-    // const customer = await tx.customer.findUnique({
-    //   where: { userId: cart.userId },
-    // });
+//     if (!cart || cart.items.length === 0) {
+//       throw new Error("Cart not found or empty");
+//     }
+//     const userId = cart.userId;
+//     // const customer = await tx.customer.findUnique({
+//     //   where: { userId: cart.userId },
+//     // });
 
-    // if (!customer) {
-    //   throw new Error("Customer not found or empty");
-    // }
+//     // if (!customer) {
+//     //   throw new Error("Customer not found or empty");
+//     // }
 
-    let cartC = addComputedCartPrices(cart);
-    // Create Order
+//     let cartC = addComputedCartPrices(cart);
+//     // Create Order
 
-    const cc = await tx.customer.update({
-      where: { userId: userId },
-      data: {
-        totalOrders: { increment: 1 },
-        totalSpent: { increment: cartC.totalPrice },
-        lastOrderDate: new Date(),
-      },
-    });
+//     const cc = await tx.customer.update({
+//       where: { userId: userId },
+//       data: {
+//         totalOrders: { increment: 1 },
+//         totalSpent: { increment: cartC.totalPrice },
+//         lastOrderDate: new Date(),
+//       },
+//     });
 
-    const order = await tx.order.create({
-      data: {
-        userId: cartC.userId,
-        firstName: cartC.firstName,
-        lastName: cartC.lastName,
-        email: cartC.email,
-        phone: cartC.phone,
-        companyName: cartC.companyName,
-        address: cartC.address,
-        city: cartC.city,
-        country: cartC.country,
-        postalCode: cartC.postalCode,
-        billingName: cartC.billingName,
-        billingEmail: cartC.billingEmail,
-        billingCompanyName: cartC.billingCompanyName,
-        billingAddress: cartC.billingAddress,
-        paymentMethod: cartC.paymentMethod,
-        deliveryMethod: cartC.deliveryMethod,
-        currency: cartC.currency,
-        subtotalPrice: cartC.subtotalPrice,
-        totalPrice: cartC.totalPrice,
-        status: "PENDING",
-        items: {
-          create: cart.items.map((cartItem) => ({
-            variantId: cartItem.variantId,
-            quantity: cartItem.quantity,
-          })),
-        },
-      },
-      include: { items: true },
-    });
+//     const order = await tx.order.create({
+//       data: {
+//         userId: cartC.userId,
+//         firstName: cartC.firstName,
+//         lastName: cartC.lastName,
+//         email: cartC.email,
+//         phone: cartC.phone,
+//         companyName: cartC.companyName,
+//         address: cartC.address,
+//         city: cartC.city,
+//         country: cartC.country,
+//         postalCode: cartC.postalCode,
+//         billingName: cartC.billingName,
+//         billingEmail: cartC.billingEmail,
+//         billingCompanyName: cartC.billingCompanyName,
+//         billingAddress: cartC.billingAddress,
+//         paymentMethod: cartC.paymentMethod,
+//         deliveryMethod: cartC.deliveryMethod,
+//         currency: cartC.currency,
+//         subtotalPrice: cartC.subtotalPrice,
+//         totalPrice: cartC.totalPrice,
+//         status: "PENDING",
+//         items: {
+//           create: cart.items.map((cartItem) => ({
+//             variantId: cartItem.variantId,
+//             quantity: cartItem.quantity,
+//           })),
+//         },
+//       },
+//       include: { items: true },
+//     });
 
-    // Clear Cart After Order is Placed
-    // await tx.cartItem.deleteMany({ where: { cartId } });
+//     // Clear Cart After Order is Placed
+//     // await tx.cartItem.deleteMany({ where: { cartId } });
 
-    return order;
-  });
-}
+//     return order;
+//   });
+// }
 
 export async function getDailyNewCustomers(
   startDateStr: string,

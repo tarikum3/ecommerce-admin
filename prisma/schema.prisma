@@ -62,6 +62,7 @@ model User {
   userNotifications UserNotification[]
   roleId        String?    
   role          Role?      @relation(fields: [roleId], references: [id]) 
+  favoriteProducts FavoriteProduct[]
   @@index([email])
 }
 
@@ -148,6 +149,7 @@ model Product {
   price            ProductPrice?
   variants         ProductVariant[]
 
+favoritedBy FavoriteProduct[]
   @@index([slug])
   @@index([vendor])
 }
@@ -217,7 +219,20 @@ model ProductPrice {
 
   @@index([productId])
 }
+model FavoriteProduct {
+  id         String   @id @default(uuid())
+  userId     String
+  productId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
+  user       User     @relation(fields: [userId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+}
 model Image {
   id        String      @id @default(uuid())
   url       String
@@ -295,7 +310,7 @@ model Cart {
   customerId         String?
   Customer           Customer?  @relation(fields: [customerId], references: [id])
   items              CartItem[]
-
+  Order      Order?
   @@index([userId])
 }
 
@@ -341,7 +356,8 @@ model Order {
   customerId         String?
   Customer           Customer?   @relation(fields: [customerId], references: [id])
   items              OrderItem[]
-
+   cartId            String    @unique
+  Cart              Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
   @@index([userId])
 }
 
