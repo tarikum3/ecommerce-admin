@@ -31,7 +31,7 @@ export default function MetricCard({
 
   if (loading) {
     return (
-      <Card className="bg-white shadow-sm">
+      <Card className="bg-primary-0 shadow-sm">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -51,7 +51,7 @@ export default function MetricCard({
   }
 
   return (
-    <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+    <Card className="bg-primary-0 shadow-sm hover:shadow-md transition-shadow duration-200">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center">

@@ -44,7 +44,7 @@ export default function DateRangeSelector({
         <Select
           value={selectedRange}
           onChange={(e) => handleChange(e.target.value)}
-          className="min-w-[160px] bg-white"
+          className="min-w-[160px] bg-primary-0"
           size="small"
         >
           {ranges.map((range) => (

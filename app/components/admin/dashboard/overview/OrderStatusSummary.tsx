@@ -188,7 +188,7 @@ const OrdersStatusSummary = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6 border border-primary-100">
+      <div className="bg-primary-0 rounded-xl shadow-sm p-6 border border-primary-100">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-semibold text-primary-900">
             Orders Status Summary
@@ -203,7 +203,7 @@ const OrdersStatusSummary = () => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 border border-primary-100">
+    <div className="bg-primary-0 rounded-xl shadow-sm p-6 border border-primary-100">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-lg font-semibold text-primary-900">
           Orders Status Summary

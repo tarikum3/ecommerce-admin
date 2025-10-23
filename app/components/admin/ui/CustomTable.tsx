@@ -154,7 +154,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
       {/* Loading indicator when sorting is in progress */}
       {isPending && (
         <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50 pointer-events-none">
-          <div className="bg-white p-4 rounded shadow-lg flex items-center gap-2">
+          <div className="bg-primary-0 p-4 rounded shadow-lg flex items-center gap-2">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-500"></div>
             <span>Sorting data...</span>
           </div>

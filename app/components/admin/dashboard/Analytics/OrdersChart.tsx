@@ -30,7 +30,7 @@ export default function OrdersChart({ data }: OrdersChartProps) {
   );
 
   return (
-    <Card className="bg-white shadow-sm">
+    <Card className="bg-primary-0 shadow-sm">
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
           <h3 className="text-lg font-semibold text-primary-900">

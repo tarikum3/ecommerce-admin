@@ -4,12 +4,12 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <main className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-primary-0 rounded-2xl shadow-xl overflow-hidden">
           {/* Decorative elements - using your theme colors */}
           <div className="relative h-2 bg-gradient-to-r from-primary-700 to-primary-900"></div>
 
           {/* Floating card effect */}
-          <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-sm">
+          <div className="relative bg-primary-0/90 backdrop-blur-sm p-8 rounded-2xl shadow-sm">
             {/* Subtle pattern in background */}
             <div className="absolute -z-10 inset-0 overflow-hidden opacity-5"></div>
 

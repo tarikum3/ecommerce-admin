@@ -20,7 +20,7 @@ export default function OrderStatusSummary({ data }: OrderStatusSummaryProps) {
   const totalOrders = data.reduce((sum, item) => sum + item.count, 0);
 
   return (
-    <Card className="bg-white shadow-sm">
+    <Card className="bg-primary-0 shadow-sm">
       <CardContent className="p-6">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Order Status Summary

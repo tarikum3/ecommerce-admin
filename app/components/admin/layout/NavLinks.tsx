@@ -271,7 +271,7 @@ const Navigation: React.FC<NavigationProps> = ({ navigationConfig }) => {
   };
 
   return (
-    <nav className="w-72 bg-gradient-to-b from-white via-primary-50 to-primary-100/50 h-full border-r border-primary-200/60 overflow-y-auto flex-shrink-0 backdrop-blur-sm">
+    <nav className="w-72 bg-gradient-to-b from-primary-0 via-primary-50 to-primary-100/50 h-full border-r border-primary-200/60 overflow-y-auto flex-shrink-0 backdrop-blur-sm">
       {/* Navigation Items */}
       <List
         component="nav"

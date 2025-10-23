@@ -41,7 +41,7 @@ const MetricCard = React.memo(
     }, [trendData]);
 
     return (
-      <div className="bg-white rounded-xl shadow-sm p-6 border border-primary-100 hover:shadow-md transition-shadow">
+      <div className="bg-primary-0 rounded-xl shadow-sm p-6 border border-primary-100 hover:shadow-md transition-shadow">
         <div className="flex justify-between items-start">
           <div>
             <p className="text-primary-600 text-sm font-medium">{title}</p>

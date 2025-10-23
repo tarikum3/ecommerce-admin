@@ -22,7 +22,7 @@ export function CardSkeleton() {
         <div className="h-5 w-5 rounded-md bg-primary-200" />
         <div className="ml-2 h-6 w-16 rounded-md bg-primary-200 text-sm font-medium" />
       </div>
-      <div className="flex items-center justify-center truncate rounded-xl bg-white px-4 py-8">
+      <div className="flex items-center justify-center truncate rounded-xl bg-primary-0 px-4 py-8">
         <div className="h-7 w-20 rounded-md bg-primary-200" />
       </div>
     </div>

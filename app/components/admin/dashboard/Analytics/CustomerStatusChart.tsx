@@ -33,7 +33,7 @@ export default function CustomerStatusChart({
   ].filter((item) => item.value > 0);
 
   return (
-    <Card className="bg-white shadow-sm">
+    <Card className="bg-primary-0 shadow-sm">
       <CardContent className="p-6">
         <h3 className="text-lg font-semibold text-primary-900 mb-4">
           Customer Status

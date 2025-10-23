@@ -179,7 +179,7 @@
 //     <div className="relative w-full max-w-[200px]">
 //       {/* Custom Dropdown Trigger */}
 //       <div
-//         className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white cursor-pointer ${className}`}
+//         className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-primary-0 cursor-pointer ${className}`}
 //         onClick={toggleDropdown}
 //         onMouseEnter={() => isOverflowing && setShowTooltip(true)}
 //         onMouseLeave={() => setShowTooltip(false)}
@@ -212,21 +212,21 @@
 
 //       {/* Tooltip for overflow text */}
 //       {showTooltip && isOverflowing && (
-//         <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-white text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
+//         <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-primary-0 text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
 //           {displayText}
 //         </div>
 //       )}
 
 //       {/* Dropdown Options */}
 //       {isDropdownOpen && (
-//         <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
+//         <div className="absolute top-full left-0 right-0 bg-primary-0 rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
 //           <div className="p-2">
 //             {options.map((option) => (
 //               <div
 //                 key={option.value}
 //                 className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
 //                   currentSelectedValue === option.value
-//                     ? "bg-primary-500 text-white"
+//                     ? "bg-primary-500 text-primary-0"
 //                     : "text-primary-800 hover:bg-primary-100"
 //                 }`}
 //                 onClick={() => handleOptionSelect(option.value)}
@@ -262,7 +262,7 @@
 //           onClick={() => toggleDatePicker(false)}
 //         >
 //           <Box
-//             className="bg-white rounded-lg shadow-xl m-4"
+//             className="bg-primary-0 rounded-lg shadow-xl m-4"
 //             onClick={(e: React.MouseEvent) => e.stopPropagation()}
 //           >
 //             <DateRangePicker
@@ -509,7 +509,7 @@
 //     <div className="relative w-full max-w-[200px]">
 //       {/* Custom Dropdown Trigger */}
 //       <div
-//         className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white cursor-pointer ${className}`}
+//         className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-primary-0 cursor-pointer ${className}`}
 //         onClick={toggleDropdown}
 //         onMouseEnter={() => isOverflowing && setShowTooltip(true)}
 //         onMouseLeave={() => setShowTooltip(false)}
@@ -542,21 +542,21 @@
 
 //       {/* Tooltip for overflow text */}
 //       {showTooltip && isOverflowing && (
-//         <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-white text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
+//         <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-primary-0 text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
 //           {displayText}
 //         </div>
 //       )}
 
 //       {/* Dropdown Options */}
 //       {isDropdownOpen && (
-//         <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
+//         <div className="absolute top-full left-0 right-0 bg-primary-0 rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
 //           <div className="p-2">
 //             {displayOptions.map((option) => (
 //               <div
 //                 key={option.value}
 //                 className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
 //                   currentSelectedValue === option.value
-//                     ? "bg-primary-500 text-white"
+//                     ? "bg-primary-500 text-primary-0"
 //                     : "text-primary-800 hover:bg-primary-100"
 //                 }`}
 //                 onClick={() => handleOptionSelect(option.value)}
@@ -592,7 +592,7 @@
 //           onClick={() => toggleDatePicker(false)}
 //         >
 //           <Box
-//             className="bg-white rounded-lg shadow-xl m-4"
+//             className="bg-primary-0 rounded-lg shadow-xl m-4"
 //             onClick={(e: React.MouseEvent) => e.stopPropagation()}
 //           >
 //             <DateRangePicker
@@ -885,7 +885,7 @@
 //           key={option.value}
 //           className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
 //             currentSelectedValue === option.value
-//               ? "bg-primary-500 text-white"
+//               ? "bg-primary-500 text-primary-0"
 //               : "text-primary-800 hover:bg-primary-100"
 //           }`}
 //           onClick={() => handleOptionSelect(option.value)}
@@ -915,7 +915,7 @@
 //     <div className="relative w-full max-w-[200px]">
 //       {/* Custom Dropdown Trigger */}
 //       <div
-//         className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white cursor-pointer ${className}`}
+//         className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-primary-0 cursor-pointer ${className}`}
 //         onClick={toggleDropdown}
 //         onMouseEnter={handleMouseEnter}
 //         onMouseLeave={handleMouseLeave}
@@ -948,14 +948,14 @@
 
 //       {/* Tooltip for overflow text */}
 //       {showTooltip && isOverflowing && (
-//         <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-white text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
+//         <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-primary-0 text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
 //           {displayText}
 //         </div>
 //       )}
 
 //       {/* Dropdown Options */}
 //       {isDropdownOpen && (
-//         <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
+//         <div className="absolute top-full left-0 right-0 bg-primary-0 rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
 //           <div className="p-2">{dropdownOptions}</div>
 //         </div>
 //       )}
@@ -967,7 +967,7 @@
 //           onClick={() => toggleDatePicker(false)}
 //         >
 //           <Box
-//             className="bg-white rounded-lg shadow-xl m-4"
+//             className="bg-primary-0 rounded-lg shadow-xl m-4"
 //             onClick={(e: React.MouseEvent) => e.stopPropagation()}
 //           >
 //             <DateRangePicker
@@ -1273,7 +1273,7 @@ export const DateDropdown: React.FC<DateDropdownProps> = ({
           key={option.value}
           className={`px-3 py-2 rounded-md cursor-pointer transition-colors ${
             currentSelectedValue === option.value
-              ? "bg-primary-500 text-white"
+              ? "bg-primary-500 text-primary-0"
               : "text-primary-800 hover:bg-primary-100"
           }`}
           onClick={() => handleOptionSelect(option.value)}
@@ -1303,7 +1303,7 @@ export const DateDropdown: React.FC<DateDropdownProps> = ({
     <div className="relative w-full max-w-[200px]">
       {/* Custom Dropdown Trigger */}
       <div
-        className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white cursor-pointer ${className}`}
+        className={`w-full border border-primary-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-primary-0 cursor-pointer ${className}`}
         onClick={toggleDropdown}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -1336,14 +1336,14 @@ export const DateDropdown: React.FC<DateDropdownProps> = ({
 
       {/* Tooltip for overflow text */}
       {showTooltip && isOverflowing && (
-        <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-white text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
+        <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-primary-800 text-primary-0 text-sm rounded-lg shadow-lg z-30 max-w-[300px] break-words">
           {displayText}
         </div>
       )}
 
       {/* Dropdown Options */}
       {isDropdownOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 bg-primary-0 rounded-lg shadow-lg border border-primary-200 z-20 max-h-64 overflow-y-auto">
           <div className="p-2">{dropdownOptions}</div>
         </div>
       )}
@@ -1355,7 +1355,7 @@ export const DateDropdown: React.FC<DateDropdownProps> = ({
           onClick={() => toggleDatePicker(false)}
         >
           <Box
-            className="bg-white rounded-lg shadow-xl m-4"
+            className="bg-primary-0 rounded-lg shadow-xl m-4"
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
             <DateRangePicker
