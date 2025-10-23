@@ -485,21 +485,21 @@ model refresh_metadata {
 }
 
 view DailyNewCustomers {
-    day        DateTime @id @db.Date
+    day        DateTime @unique @db.Date
     new_customers Int
 
-    @@map("daily_new_customers") 
+    
     
 } 
  view DailyNewOrders {
-    day        DateTime @id @db.Date
+    day        DateTime @unique @db.Date
     new_orders Int
 
-    @@map("daily_new_orders") 
+ 
     
 } 
 view OrderStatusSummary {
-  day              DateTime @id @db.Date
+  day              DateTime @unique @db.Date
   total_orders     Int
   pending_orders   Int
   confirmed_orders Int
@@ -508,11 +508,11 @@ view OrderStatusSummary {
   refunded_orders  Int
   completed_revenue Float
 
-  @@map("order_status_summary")
+
 }
 
 view CustomerStatusSummary {
-  day            DateTime @id @db.Date
+  day            DateTime @unique @db.Date
   total_customers    Int
   one_time_customers Int
   returning_customers Int
@@ -520,7 +520,7 @@ view CustomerStatusSummary {
   normal_customers   Int
   active_customers   Int
   inactive_customers Int
-  @@map("customer_status_summary")
+  
     
 }
 
