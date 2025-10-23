@@ -14,13 +14,10 @@ const UserMenu = dynamic(() => import("@/app/components/admin/user/usermenu"), {
   ssr: false,
 });
 
-const NavLinks = dynamic(
-  () => import("@/app/components/admin/layout/NavLinks"),
-  {
-    loading: () => <div className="flex-1 bg-primary-100" />,
-    ssr: false,
-  }
-);
+const NavBar = dynamic(() => import("@/app/components/admin/layout/NavBar"), {
+  loading: () => <div className="flex-1 bg-primary-100" />,
+  ssr: false,
+});
 
 export default function Sidebar() {
   const { closeLeftSidebar } = useUI();
@@ -49,7 +46,7 @@ export default function Sidebar() {
         </div>
 
         {/* Sidebar Content */}
-        <NavLinks />
+        <NavBar />
 
         {/* User Menu */}
         <UserMenu />

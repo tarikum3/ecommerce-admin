@@ -1,14 +1,3 @@
-// "use client";
-// import { createTheme } from "@mui/material/styles";
-
-// const theme = createTheme({
-//   //   typography: {
-//   //     fontFamily: 'var(--font-roboto)',
-//   //   },
-// });
-
-// export default theme;
-
 "use client";
 import { createTheme } from "@mui/material/styles";
 import { COLORS } from "@lib/const";
@@ -183,3 +172,63 @@ export const darkTheme = createTheme({
     },
   },
 });
+
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: "#3b82f6", // Tailwind's primary-500 (blue)
+//       light: "#60a5fa", // primary-400
+//       dark: "#2563eb", // primary-600
+//     },
+//     background: {
+//       default: "#f9fafb", // Tailwind's primary-50
+//       paper: "#ffffff",
+//     },
+//     text: {
+//       primary: "#111827", // near-black
+//       secondary: "#374151", // primary-700
+//     },
+//   },
+//   shape: {
+//     borderRadius: 16, // smooth modern corners
+//   },
+//   components: {
+//     MuiPaper: {
+//       styleOverrides: {
+//         root: {
+//           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+//           transition: "box-shadow 0.2s ease-in-out",
+//           "&:hover": {
+//             boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+//           },
+//         },
+//       },
+//     },
+//     MuiButton: {
+//       styleOverrides: {
+//         root: {
+//           textTransform: "none",
+//           borderRadius: 12,
+//           padding: "10px 20px",
+//           fontWeight: 600,
+//         },
+//       },
+//     },
+//     MuiTextField: {
+//       styleOverrides: {
+//         root: {
+//           "& .MuiOutlinedInput-root": {
+//             borderRadius: 12,
+//             "&:hover fieldset": {
+//               borderColor: "#3b82f6",
+//             },
+//             "&.Mui-focused fieldset": {
+//               borderColor: "#2563eb",
+//               boxShadow: "0 0 0 2px rgba(59,130,246,0.2)",
+//             },
+//           },
+//         },
+//       },
+//     },
+//   },
+// });

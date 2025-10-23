@@ -368,18 +368,140 @@ export type ProductFormData = {
 //   }
 // }
 
+// export async function createProduct(data: ProductFormData) {
+//   const { images, variants, price, options, ...productData } = data;
+//   const slug = convertToSlug(data.name);
+
+//   try {
+//     const newProduct = await prisma.product.create({
+//       data: {
+//         ...productData,
+//         slug,
+//         availableForSale: productData.availableForSale || false,
+//         images: {
+//           create: images.map((url) => ({ url })),
+//         },
+//         price: {
+//           create: {
+//             amount: price.amount,
+//             currency: price.currency,
+//           },
+//         },
+//         options: {
+//           create: options.map((option) => ({
+//             name: option.name,
+//             values: {
+//               create: option.values.map((value) => ({ value })),
+//             },
+//           })),
+//         },
+//         variants: {
+//           create: await Promise.all(
+//             variants.map(async (variant) => {
+//               // For each selected option in the variant, find the corresponding option value ID
+//               const variantOptionsCreates = await Promise.all(
+//                 variant.selectedOptions.map(async (selectedOption) => {
+//                   // Find the option value that matches both option name and value
+//                   const optionValue = await prisma.productOptionValue.findFirst(
+//                     {
+//                       where: {
+//                         value: selectedOption.value,
+//                         option: {
+//                           name: selectedOption.optionName,
+//                           product: { slug }, // Ensure we're getting values from this product
+//                         },
+//                       },
+//                     }
+//                   );
+
+//                   if (!optionValue) {
+//                     throw new Error(
+//                       `Option value not found for ${selectedOption.optionName}: ${selectedOption.value}`
+//                     );
+//                   }
+
+//                   return {
+//                     optionValue: { connect: { id: optionValue.id } },
+//                   };
+//                 })
+//               );
+
+//               return {
+//                 name: variant.name,
+//                 price: variant.price,
+//                 quantity: variant.quantity,
+//                 availableForSale: variant.availableForSale || false,
+//                 variantOptions: {
+//                   create: variantOptionsCreates,
+//                 },
+//               };
+//             })
+//           ),
+//         },
+//       },
+//       include: {
+//         images: true,
+//         variants: {
+//           include: {
+//             variantOptions: {
+//               include: {
+//                 optionValue: {
+//                   include: {
+//                     option: true,
+//                   },
+//                 },
+//               },
+//             },
+//           },
+//         },
+//         price: true,
+//         options: {
+//           include: {
+//             values: true,
+//           },
+//         },
+//       },
+//     });
+
+//     return newProduct;
+//   } catch (error) {
+//     console.error("Error creating product:", error);
+//     throw new Error("Failed to create product");
+//   }
+// }
 export async function createProduct(data: ProductFormData) {
   const { images, variants, price, options, ...productData } = data;
   const slug = convertToSlug(data.name);
 
   try {
+    // First, get the temp image records to verify they exist
+    const tempImages = await prisma.tempImage.findMany({
+      where: {
+        url: {
+          in: images,
+        },
+      },
+    });
+
+    // Optional: Verify all images have corresponding temp records
+    // This ensures images were properly uploaded before product creation
+    const missingTempImages = images.filter(
+      (url) => !tempImages.some((tempImage) => tempImage.url === url)
+    );
+
+    if (missingTempImages.length > 0) {
+      throw new Error(
+        `Missing temp image records for URLs: ${missingTempImages.join(", ")}`
+      );
+    }
+
     const newProduct = await prisma.product.create({
       data: {
         ...productData,
         slug,
         availableForSale: productData.availableForSale || false,
         images: {
-          create: images.map((url) => ({ url })),
+          create: images.map((url) => ({ url })), // No supabaseId here
         },
         price: {
           create: {
@@ -398,17 +520,15 @@ export async function createProduct(data: ProductFormData) {
         variants: {
           create: await Promise.all(
             variants.map(async (variant) => {
-              // For each selected option in the variant, find the corresponding option value ID
               const variantOptionsCreates = await Promise.all(
                 variant.selectedOptions.map(async (selectedOption) => {
-                  // Find the option value that matches both option name and value
                   const optionValue = await prisma.productOptionValue.findFirst(
                     {
                       where: {
                         value: selectedOption.value,
                         option: {
                           name: selectedOption.optionName,
-                          product: { slug }, // Ensure we're getting values from this product
+                          product: { slug },
                         },
                       },
                     }
@@ -463,13 +583,21 @@ export async function createProduct(data: ProductFormData) {
       },
     });
 
+    // Clean up temp images after successful product creation
+    await prisma.tempImage.deleteMany({
+      where: {
+        url: {
+          in: images,
+        },
+      },
+    });
+
     return newProduct;
   } catch (error) {
     console.error("Error creating product:", error);
     throw new Error("Failed to create product");
   }
 }
-
 export async function updateProduct(id: string, data: any) {
   return await prisma.product.update({
     where: { id },
@@ -2419,6 +2547,67 @@ export async function fetchRoles(
   return { roles, total, totalPage };
 }
 
+// export async function getCustomerStatusSummary(startDateStr?: string, endDateStr?: string) {
+//   try {
+//     const whereCondition: any = {};
+
+//     if (startDateStr && endDateStr) {
+//       const startDate = dateSchema.parse(startDateStr);
+//       const endDate = dateSchema.parse(endDateStr);
+//       whereCondition.createdAt = {
+//         gte: new Date(startDate),
+//         lte: new Date(endDate),
+//       };
+//     }
+
+//     // Get total customers
+//     const totalCustomers = await prisma.customer.count({ where: whereCondition });
+
+//     // Get one-time vs returning customers
+//     const customerOrders = await prisma.customer.findMany({
+//       where: whereCondition,
+//       include: {
+//         orders: {
+//           select: { id: true },
+//         },
+//       },
+//     });
+
+//     const oneTimeCustomers = customerOrders.filter(c => c.orders.length === 1).length;
+//     const returningCustomers = customerOrders.filter(c => c.orders.length > 1).length;
+
+//     // Get VIP customers (custom logic - customers with total spent > 1000)
+//     const vipCustomers = await prisma.customer.count({
+//       where: {
+//         ...whereCondition,
+//         totalSpent: { gt: 1000 },
+//       },
+//     });
+
+//     // Active customers (placed order in last 30 days)
+//     const activeCustomers = await prisma.customer.count({
+//       where: {
+//         ...whereCondition,
+//         lastOrderDate: {
+//           gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+//         },
+//       },
+//     });
+
+//     return {
+//       day: new Date().toISOString().split('T')[0],
+//       total_customers: totalCustomers,
+//       one_time_customers: oneTimeCustomers,
+//       returning_customers: returningCustomers,
+//       vip_customers: vipCustomers,
+//       active_customers: activeCustomers,
+//     };
+//   } catch (error) {
+//     console.error("Error fetching customer status summary:", error);
+//     throw error;
+//   }
+// }
+
 // async function checkmain() {
 //   // First, execute the SELECT query
 //   const selectResult = await prisma.$queryRaw`
@@ -2485,4 +2674,458 @@ export async function createTempImage(
       supabaseId: filePath, // Using the path as ID since Supabase doesn't return a separate ID
     },
   });
+}
+
+// Validation schemas
+
+// Daily New Customers
+export async function getDailyNewCustomersNew(
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const startDate = dateSchema.parse(startDateStr);
+    const endDate = dateSchema.parse(endDateStr);
+
+    const results = await prisma.$queryRaw`
+      SELECT
+        day,
+        new_customers
+      FROM
+        daily_new_customers
+      WHERE
+        day >= ${new Date(startDate)} AND day <= ${new Date(endDate)}
+      ORDER BY
+        day;
+    `;
+
+    return results;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        "Invalid date format. Please provide valid date strings."
+      );
+    }
+    console.error("Error fetching daily new customers:", error);
+    throw new Error("An unexpected error occurred while fetching the data.");
+  }
+}
+
+export async function getMonthlyNewCustomersNew(
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const startDate = dateSchema.parse(startDateStr);
+    const endDate = dateSchema.parse(endDateStr);
+
+    const results = await prisma.$queryRaw`
+      SELECT
+        TO_CHAR(DATE_TRUNC('month', day), 'Month YYYY') AS month,
+        SUM(new_customers) AS new_customers
+      FROM
+        daily_new_customers
+      WHERE
+        day >= ${new Date(startDate)} AND day <= ${new Date(endDate)}
+      GROUP BY
+        DATE_TRUNC('month', day)
+      ORDER BY
+        DATE_TRUNC('month', day);
+    `;
+
+    return results;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        "Invalid date format. Please provide valid date strings."
+      );
+    }
+    console.error("Error fetching monthly new customers:", error);
+    throw new Error("An unexpected error occurred while fetching the data.");
+  }
+}
+
+// Daily New Orders
+export async function getDailyNewOrders(
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const startDate = dateSchema.parse(startDateStr);
+    const endDate = dateSchema.parse(endDateStr);
+
+    const results = await prisma.$queryRaw`
+      SELECT
+        day,
+        new_orders
+      FROM
+        daily_new_orders
+      WHERE
+        day >= ${new Date(startDate)} AND day <= ${new Date(endDate)}
+      ORDER BY
+        day;
+    `;
+
+    return results;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        "Invalid date format. Please provide valid date strings."
+      );
+    }
+    console.error("Error fetching daily new orders:", error);
+    throw new Error("An unexpected error occurred while fetching the data.");
+  }
+}
+
+export async function getMonthlyNewOrdersNew(
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const startDate = dateSchema.parse(startDateStr);
+    const endDate = dateSchema.parse(endDateStr);
+
+    const results = await prisma.$queryRaw`
+      SELECT
+        TO_CHAR(DATE_TRUNC('month', day), 'Month YYYY') AS month,
+        SUM(new_orders) AS new_orders
+      FROM
+        daily_new_orders
+      WHERE
+        day >= ${new Date(startDate)} AND day <= ${new Date(endDate)}
+      GROUP BY
+        DATE_TRUNC('month', day)
+      ORDER BY
+        DATE_TRUNC('month', day);
+    `;
+
+    return results;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        "Invalid date format. Please provide valid date strings."
+      );
+    }
+    console.error("Error fetching monthly new orders:", error);
+    throw new Error("An unexpected error occurred while fetching the data.");
+  }
+}
+
+// Order Status Summary
+export async function getOrdersStatusSummaryNew(
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const startDate = dateSchema.parse(startDateStr);
+    const endDate = dateSchema.parse(endDateStr);
+
+    const results = await prisma.$queryRaw`
+      SELECT
+        day,
+        total_orders,
+        pending_orders,
+        confirmed_orders,
+        completed_orders,
+        canceled_orders,
+        refunded_orders,
+        completed_revenue
+      FROM
+        order_status_summary
+      WHERE
+        day >= ${new Date(startDate)} AND day <= ${new Date(endDate)}
+      ORDER BY
+        day;
+    `;
+
+    return results;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        "Invalid date format. Please provide valid date strings."
+      );
+    }
+    console.error("Error fetching order status summary:", error);
+    throw new Error("An unexpected error occurred while fetching the data.");
+  }
+}
+
+// Customer Status Summary
+export async function getCustomerStatusSummaryNew(
+  startDateStr: string,
+  endDateStr: string
+) {
+  try {
+    const startDate = dateSchema.parse(startDateStr);
+    const endDate = dateSchema.parse(endDateStr);
+
+    const results = await prisma.$queryRaw`
+      SELECT
+        day,
+        total_customers,
+        one_time_customers,
+        returning_customers,
+        vip_customers,
+        normal_customers,
+        active_customers,
+        inactive_customers
+      FROM
+        customer_status_summary
+      WHERE
+        day >= ${new Date(startDate)} AND day <= ${new Date(endDate)}
+      ORDER BY
+        day;
+    `;
+
+    return results;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        "Invalid date format. Please provide valid date strings."
+      );
+    }
+    console.error("Error fetching customer status summary:", error);
+    throw new Error("An unexpected error occurred while fetching the data.");
+  }
+}
+
+// Recent Orders
+export async function getRecentOrders(limit: number = 10) {
+  try {
+    const orders = await prisma.order.findMany({
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        Customer: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return orders.map((order) => ({
+      id: order.id,
+      customer: {
+        firstName: order.Customer?.user?.firstName || order.firstName,
+        lastName: order.Customer?.user?.lastName || order.lastName,
+        email: order.Customer?.user?.email || order.email,
+      },
+      totalPrice: order.totalPrice,
+      status: order.status,
+      createdAt: order.createdAt,
+      customerId: order.customerId,
+    }));
+  } catch (error) {
+    console.error("Error fetching recent orders:", error);
+    throw new Error(
+      "An unexpected error occurred while fetching recent orders."
+    );
+  }
+}
+
+// Top Products
+export async function getTopProducts(limit: number = 10) {
+  try {
+    const topProducts = await prisma.product.findMany({
+      take: limit,
+      orderBy: {
+        favoritedBy: {
+          _count: "desc",
+        },
+      },
+      include: {
+        favoritedBy: {
+          select: {
+            id: true,
+          },
+        },
+        variants: {
+          include: {
+            OrderItem: {
+              select: {
+                quantity: true,
+              },
+            },
+          },
+        },
+        price: {
+          select: {
+            amount: true,
+          },
+        },
+        images: {
+          take: 1,
+          select: {
+            url: true,
+          },
+        },
+      },
+    });
+
+    return topProducts.map((product) => {
+      // Calculate total sold across all variants
+      const totalSold = product.variants.reduce((total, variant) => {
+        return (
+          total +
+          variant.OrderItem.reduce((sum, item) => sum + item.quantity, 0)
+        );
+      }, 0);
+
+      return {
+        id: product.id,
+        name: product.name,
+        price: product.price?.amount || 0,
+        favoriteCount: product.favoritedBy.length,
+        totalSold: totalSold,
+        availableForSale: product.availableForSale,
+        image: product.images[0]?.url || null,
+        category: product.category,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching top products:", error);
+    throw new Error(
+      "An unexpected error occurred while fetching top products."
+    );
+  }
+}
+
+// Dashboard Overview Stats
+export async function getDashboardOverview() {
+  try {
+    // Get latest order status summary
+    const latestOrderSummary = await prisma.$queryRaw`
+      SELECT 
+        total_orders,
+        pending_orders,
+        confirmed_orders,
+        completed_orders,
+        canceled_orders,
+        refunded_orders,
+        completed_revenue
+      FROM order_status_summary 
+      ORDER BY day DESC 
+      LIMIT 1
+    `;
+
+    // Get latest customer status summary
+    const latestCustomerSummary = await prisma.$queryRaw`
+      SELECT 
+        total_customers,
+        one_time_customers,
+        returning_customers,
+        vip_customers,
+        active_customers,
+        inactive_customers
+      FROM customer_status_summary 
+      ORDER BY day DESC 
+      LIMIT 1
+    `;
+
+    // Get total products count
+    const totalProducts = await prisma.product.count({
+      where: { availableForSale: true },
+    });
+
+    return {
+      orderStatusSummary: Array.isArray(latestOrderSummary)
+        ? latestOrderSummary[0]
+        : latestOrderSummary,
+      customerStatusSummary: Array.isArray(latestCustomerSummary)
+        ? latestCustomerSummary[0]
+        : latestCustomerSummary,
+      totalProducts,
+    };
+  } catch (error) {
+    console.error("Error fetching dashboard overview:", error);
+    throw new Error(
+      "An unexpected error occurred while fetching dashboard overview."
+    );
+  }
+}
+
+// Refresh Daily New Customers Materialized View
+export async function refreshDailyNewCustomers() {
+  await prisma.$executeRaw`
+    REFRESH MATERIALIZED VIEW daily_new_customers;
+  `;
+
+  await prisma.$executeRaw`
+    UPDATE refresh_metadata 
+    SET last_refreshed_date = CURRENT_DATE 
+    WHERE view_name = 'daily_new_customers';
+  `;
+
+  console.log("Daily new customers materialized view refreshed successfully.");
+}
+
+// Refresh Daily New Orders Materialized View
+export async function refreshDailyNewOrders() {
+  await prisma.$executeRaw`
+    REFRESH MATERIALIZED VIEW daily_new_orders;
+  `;
+
+  await prisma.$executeRaw`
+    UPDATE refresh_metadata 
+    SET last_refreshed_date = CURRENT_DATE 
+    WHERE view_name = 'daily_new_orders';
+  `;
+
+  console.log("Daily new orders materialized view refreshed successfully.");
+}
+
+// Refresh Order Status Summary Materialized View
+export async function refreshOrderStatusSummary() {
+  await prisma.$executeRaw`
+    REFRESH MATERIALIZED VIEW order_status_summary;
+  `;
+
+  await prisma.$executeRaw`
+    UPDATE refresh_metadata 
+    SET last_refreshed_date = CURRENT_DATE 
+    WHERE view_name = 'order_status_summary';
+  `;
+
+  console.log("Order status summary materialized view refreshed successfully.");
+}
+
+// Refresh Customer Status Summary Materialized View
+export async function refreshCustomerStatusSummary() {
+  await prisma.$executeRaw`
+    REFRESH MATERIALIZED VIEW customer_status_summary;
+  `;
+
+  await prisma.$executeRaw`
+    UPDATE refresh_metadata 
+    SET last_refreshed_date = CURRENT_DATE 
+    WHERE view_name = 'customer_status_summary';
+  `;
+
+  console.log(
+    "Customer status summary materialized view refreshed successfully."
+  );
+}
+
+// Refresh all materialized views
+export async function refreshAllMaterializedViews() {
+  try {
+    await Promise.all([
+      refreshDailyNewCustomers(),
+      refreshDailyNewOrders(),
+      refreshOrderStatusSummary(),
+      refreshCustomerStatusSummary(),
+    ]);
+    console.log("All materialized views refreshed successfully.");
+  } catch (error) {
+    console.error("Error refreshing materialized views:", error);
+    throw error;
+  }
 }

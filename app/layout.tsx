@@ -40,6 +40,12 @@ export default async function RootLayout({
   const resources = await getUserResources();
   return (
     <html lang={locale}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+      </head>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
           <AppRouterCacheProvider
